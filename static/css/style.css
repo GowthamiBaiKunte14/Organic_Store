@@ -1,0 +1,1733 @@
+/* ===============================
+   GLOBAL STYLES
+================================ */
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f6fbf4;
+}
+
+/* ===============================
+   NAVBAR
+================================ */
+
+.main-navbar {
+  background: #fbf8f5;
+  padding: 12px 30px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  border-bottom: 1px solid #e2e2e2;
+  transition: 0.3s;
+}
+
+.main-navbar.scrolled {
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-logo {
+  height: 40px;
+}
+
+.brand-name {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+/* Menu */
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 35px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.subscription-link {
+  font-weight: 600;
+  color: #e0b000;
+}
+
+/* Icons */
+
+.nav-icons {
+  display: flex;
+  gap: 18px;
+  font-size: 20px;
+}
+
+.nav-icons a {
+  color: #333;
+  text-decoration: none;
+}
+
+.cart-icon {
+    position: relative;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.cart-count {
+    background: red;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    position: absolute;
+    top: -8px;
+    right: -10px;
+}
+
+/* ===============================
+   HERO SECTION
+================================ */
+
+/* HERO SECTION */
+.hero {
+    width: 100%;
+}
+
+.hero-slide {
+    height: 520px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.hero-overlay h1 {
+    font-size: 52px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.hero-overlay p {
+    font-size: 20px;
+    max-width: 700px;
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-primary {
+    background: #6fbf73;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    border: 2px solid white;
+    color: white;
+    padding: 12px 26px;
+    border-radius: 40px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ===============================
+   SHOP BY CATEGORY – PREMIUM STYLE
+================================ */
+
+.category-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Card */
+.category-card {
+  background: #ffffff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+/* Image */
+.category-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Text section */
+.category-name {
+  padding: 16px 12px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+/* Hover effect */
+.category-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Kill ALL link styling */
+.category-link,
+.category-link:hover,
+.category-link:visited,
+.category-link:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Category section spacing */
+.category-section {
+  padding: 80px 0;
+}
+
+
+/* ===============================
+   SHOP BY CATEGORY LINK FIX
+================================ */
+
+.category-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.category-link:visited,
+.category-link:active,
+.category-link:focus {
+  text-decoration: none;
+  color: inherit;
+  outline: none;
+}
+
+/* Category title text */
+.category-overlay h5 {
+  color: #ffffff;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* Optional subtle hover polish */
+.category-link:hover {
+  text-decoration: none;
+}
+
+.category-card a,
+.category-card a * {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ===============================
+   PRODUCT ROTATOR HERO
+================================ */
+
+.wave-wall {
+  position: relative;
+  height: 480px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  animation: bgRotate 18s infinite ease-in-out;
+}
+
+/* Background slideshow */
+
+@keyframes bgRotate {
+  0% { background-image: url("/static/images/hero.jpg"); }
+  33% { background-image: url("/static/images/oil1.jpg"); }
+  66% { background-image: url("/static/images/seeds.jpg"); }
+  100% { background-image: url("/static/images/pickle.jpg"); }
+}
+
+/* Overlay */
+
+.wave-wall::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 1;
+}
+
+/* Rotator row */
+
+.rotator-track {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 25px;
+  padding: 120px 0;
+  animation: slideRotator 30s linear infinite;
+}
+
+/* Product card */
+
+.rotator-item {
+  min-width: 170px;
+  height: 220px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.rotator-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* PRODUCT GRID IMAGE FIX */
+
+.product-card img,
+.card img {
+
+  width: 100%;
+  height: 220px;          /* Fixed clean height */
+  object-fit: cover;     /* Crop nicely without stretch */
+  border-radius: 14px 14px 0 0;
+
+}
+
+.product-card,
+.card {
+
+  max-width: 100%;
+  overflow: hidden;
+
+}
+
+.card img {
+  transition: 0.4s ease;
+}
+
+.card:hover img {
+  transform: scale(1.08);
+}
+
+
+
+/* Movement */
+
+@keyframes slideRotator {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ===============================
+   BEST SELLER
+================================ */
+
+.best-slider {
+  overflow: hidden;
+}
+
+.best-track {
+  display: flex;
+  gap: 24px;
+}
+
+.best-card {
+  min-width: 260px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+  transition: .3s;
+}
+
+.best-card:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.best-img img {
+  height: 200px;
+  width: 100%;
+  object-fit: cover;
+}
+
+/* ===============================
+   FEATURED PRODUCTS
+================================ */
+
+.featured-section {
+  background: #f7fbf4;
+  padding: 60px 40px;
+}
+
+.featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+  gap: 25px;
+}
+
+.featured-card {
+  background: white;
+  border-radius: 18px;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 12px 25px rgba(0,0,0,0.08);
+  transition: .3s;
+}
+
+.featured-card:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.featured-card img {
+  height: 200px;
+  width: 100%;
+  object-fit: contain;
+}
+
+/* ===============================
+   PRODUCT TITLE LINK FIX
+================================ */
+
+/* Remove default link styling */
+.product-link,
+.product-link:visited {
+  text-decoration: none;
+  color: #1f2937; /* dark neutral */
+}
+
+/* Title text */
+.product-link h5 {
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+  color: #1f2937;
+}
+
+/* Hover effect – premium & subtle */
+.product-link:hover h5 {
+  color: #2f855a; /* organic green */
+  text-decoration: none;
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-link:hover {
+  text-decoration: none;
+}
+
+.card a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* ===============================
+   REVIEWS MARQUEE
+================================ */
+
+.rating-marquee {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rating-track {
+  display: flex;
+  gap: 25px;
+  width: max-content;
+}
+
+.track-left {
+  animation: scrollLeft 45s linear infinite;
+}
+
+.track-right {
+  animation: scrollRight 45s linear infinite;
+}
+
+.rating-card {
+  min-width: 380px;
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+@keyframes scrollLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.rating-number {
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.stars {
+    color: #f5a623;
+    font-size: 18px;
+}
+
+.big-stars {
+    font-size: 28px;
+}
+
+.review-box {
+    padding: 10px 0;
+}
+
+.star-input {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.star-input input {
+    display: none;
+}
+
+.star-input label {
+    font-size: 28px;
+    color: #ccc;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.star-input input:checked ~ label,
+.star-input label:hover,
+.star-input label:hover ~ label {
+    color: #f5a623;
+}
+
+.verified-badge {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 3px 8px;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-left: 8px;
+}
+
+/* ===============================
+   INSTAGRAM
+================================ */
+
+.instagram-section {
+  padding: 60px 20px;
+  background: #f7fbf4;
+}
+
+.insta-scroll {
+  overflow: hidden;
+}
+
+.insta-track {
+  display: flex;
+  gap: 20px;
+  animation: instaScroll 40s linear infinite;
+}
+
+.insta-scroll:hover .insta-track {
+  animation-play-state: paused;
+}
+
+.insta-item {
+  min-width: 320px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+@keyframes instaScroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ===============================
+   INSTAGRAM OVERLAY
+================================ */
+
+.insta-item {
+  min-width: 320px;
+  height: 420px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+
+.insta-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.insta-overlay span {
+  font-size: 36px;
+  color: #fff;
+}
+
+.insta-item:hover .insta-overlay {
+  opacity: 1;
+}
+
+/* ===============================
+   INSTAGRAM MODAL
+================================ */
+
+.insta-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.insta-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 18px;
+}
+
+.insta-close {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  font-size: 34px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* ===============================
+   INSTAGRAM REELS ONLY
+================================ */
+
+.insta-reel {
+  min-width: 320px;
+  height: 220px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #1f2937, #000);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.insta-reel:hover {
+  transform: translateY(-6px);
+}
+
+.reel-icon {
+  font-size: 46px;
+}
+
+.insta-reel p {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  opacity: 0.85;
+}
+
+/* ===============================
+   INSTAGRAM EMBED SCROLL
+================================ */
+
+.insta-scroll {
+  overflow-x: auto;
+}
+
+.insta-track {
+  display: flex;
+  gap: 20px;
+  padding-bottom: 10px;
+}
+
+.insta-embed {
+  min-width: 340px;
+  max-width: 340px;
+}
+
+/* ===============================
+   REAL INSTAGRAM REELS SCROLL
+================================ */
+
+.real-reels {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.real-reels::-webkit-scrollbar {
+  display: none;
+}
+
+.real-reels .insta-track {
+  display: flex;
+  gap: 20px;
+}
+
+.insta-embed {
+  min-width: 340px;
+  scroll-snap-align: start;
+}
+
+/* ===============================
+   VIEW MORE ON INSTAGRAM BUTTON
+================================ */
+
+.insta-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #8fbc8f;
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.insta-view-btn:hover {
+  background: #7aa87a;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.insta-icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+
+
+/* ===============================
+   RECENTLY VIEWED
+================================ */
+.recent-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.recent-track::-webkit-scrollbar {
+  display: none;
+}
+
+.recent-track .col-md-3 {
+  min-width: 260px;
+}
+
+.recent-card {
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 14px 35px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.badge-wrap {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+.badge {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px;
+  color: #fff;
+}
+
+.bestseller {
+  background: #ff7a18;
+}
+
+.offer {
+  background: #22c55e;
+}
+
+.recent-img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+
+.recent-body {
+  padding: 18px;
+}
+
+.title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.title-row h5 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.rating {
+  font-size: 14px;
+  color: #f59e0b;
+}
+
+.desc {
+  font-size: 14px;
+  color: #64748b;
+  margin: 6px 0 12px;
+}
+
+.size-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.size {
+  padding: 6px 14px;
+  border-radius: 18px;
+  border: 1px solid #d1fae5;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.size.active {
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 600;
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.old-price {
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.cart-btn {
+  margin-left: auto;
+  border: none;
+  background: #e5e7eb;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: not-allowed;
+}
+
+.stock {
+  color: #ef4444;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* ===============================
+   REVIEWS MARQUEE
+================================ */
+
+.rating-marquee {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.rating-track {
+  display: flex;
+  gap: 25px;
+  width: max-content;
+}
+
+.rating-card {
+  min-width: 380px;
+  background: white;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+}
+
+.track-left {
+  animation: scrollLeft 45s linear infinite;
+}
+
+.track-right {
+  animation: scrollRight 45s linear infinite;
+}
+
+/* Pause on hover */
+.rating-marquee:hover .rating-track {
+  animation-play-state: paused;
+}
+
+@keyframes scrollLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.rating-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.star {
+  color: #ddd;
+  font-size: 18px;
+}
+
+.star.filled {
+  color: #f5b301;
+}
+
+.review-count {
+  margin-left: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.product-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.product-link:hover {
+  color: inherit;
+}
+
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.product-card-link:hover {
+  color: inherit;
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+}
+
+.product-img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 15px;
+  text-align: center;
+}
+
+.product-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #1e7d46;
+}
+
+/* =========================
+   PRODUCTS PAGE
+========================= */
+
+.products-container {
+    padding: 40px 60px;
+    background: #f1f3f6;
+    min-height: 80vh;
+}
+
+.page-title {
+    font-size: 28px;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+/* Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 25px;
+}
+
+/* Card */
+.product-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* Image */
+.product-image {
+    display: block;
+    background: #fff;
+    text-align: center;
+    padding: 15px;
+}
+
+.product-image img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+}
+
+/* Info */
+.product-info {
+    padding: 15px;
+    text-align: center;
+}
+
+.product-name {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.product-price {
+    color: #388e3c;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+/* Buttons */
+.product-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-cart {
+    background: #2e7d32;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-buy {
+    background: #ff9f00;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-cart:hover {
+    background: #1b5e20;
+}
+
+.btn-buy:hover {
+    background: #e68900;
+}
+
+/* ===============================
+   REVIEW SECTION (Flipkart style)
+================================ */
+
+.reviews-section {
+    margin-top: 50px;
+}
+
+.review-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.rating-summary {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.avg-rating {
+    background: #388e3c;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.avg-number {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.avg-star {
+    font-size: 22px;
+}
+
+.review-list {
+    margin-top: 20px;
+}
+
+.review-card {
+    border-bottom: 1px solid #eee;
+    padding: 15px 0;
+}
+
+.review-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.review-rating {
+    background: #388e3c;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.review-user {
+    font-weight: 600;
+    color: #333;
+}
+
+.review-comment {
+    color: #555;
+    font-size: 15px;
+}
+
+.review-card {
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+}
+
+.review-rating {
+    background: #388e3c;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.verified-badge {
+    color: #388e3c;
+    font-size: 13px;
+    margin-left: 8px;
+}
+
+
+/* Write Review */
+.write-review {
+    margin-top: 40px;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    background: #fafafa;
+}
+
+.write-review input,
+.write-review textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.submit-review-btn {
+    margin-top: 15px;
+    background: #ff9f00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.submit-review-btn:hover {
+    background: #fb8c00;
+}
+
+/* Rating summary */
+.rating-summary-box {
+    display: flex;
+    gap: 40px;
+    padding: 20px 0;
+}
+
+.rating-left {
+    min-width: 120px;
+}
+
+.avg-rating-big {
+    background: #388e3c;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.rating-count {
+    margin-top: 6px;
+    color: #777;
+    font-size: 14px;
+}
+
+.rating-right {
+    flex: 1;
+}
+
+.rating-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 6px 0;
+}
+
+.star-label {
+    width: 40px;
+    font-size: 14px;
+}
+
+.bar {
+    flex: 1;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: #ff9f00;
+}
+
+.count {
+    width: 20px;
+    font-size: 14px;
+}
+
+/* Reviews */
+.review-card {
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+}
+
+.review-stars {
+    color: #ff9f00;
+    font-size: 16px;
+    margin-bottom: 4px;
+}
+
+.verified-badge {
+    color: #388e3c;
+    font-size: 13px;
+    margin-left: 8px;
+}
+
+/* Star rating */
+.star-rating {
+    font-size: 28px;
+    color: #ccc;
+    margin-top: 10px;
+}
+
+.star {
+    cursor: pointer;
+}
+
+.star.active {
+    color: #ffc107;
+}
+
+/* Rating summary layout */
+.rating-summary {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    margin: 30px 0;
+}
+
+.rating-average {
+    min-width: 120px;
+}
+
+.rating-average h2 {
+    margin: 0;
+    font-size: 36px;
+    color: #333;
+}
+
+.rating-stars {
+    color: #f5a623;
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.rating-count {
+    color: #777;
+    font-size: 14px;
+}
+
+/* Rating bars */
+.rating-bars {
+    flex: 1;
+}
+
+.rating-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 6px 0;
+}
+
+.rating-label {
+    width: 30px;
+}
+
+.rating-bar {
+    flex: 1;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.rating-fill {
+    height: 100%;
+    background: #f5a623;
+}
+
+
+/* ===============================
+   FOOTER
+================================ */
+
+.site-footer {
+  background: #fbf8f5;
+  padding: 60px 40px 20px;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(230px,1fr));
+  gap: 40px;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* FOOTER LOGO FIX */
+
+.footer-logo img {
+  max-width: 140px;
+  height: auto;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.footer-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* use center if you want */
+}
+
+/* NAV LINKS – CLEAN & PROFESSIONAL */
+
+.nav-menu li a {
+  text-decoration: none;
+  color: #2c2c2c;
+  font-weight: 500;
+  position: relative;
+  padding: 6px 0;
+}
+
+/* Remove blue underline everywhere */
+.nav-menu li a:visited,
+.nav-menu li a:active,
+.nav-menu li a:focus {
+  color: #2c2c2c;
+  text-decoration: none;
+  outline: none;
+}
+
+/* Hover underline (custom, not blue) */
+.nav-menu li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: #4CAF50;
+  transition: width 0.3s ease;
+}
+
+.nav-menu li a:hover::after,
+.nav-menu li a.active::after {
+  width: 100%;
+}
+
+.nav-menu li a,
+.nav-menu li a.active {
+  font-weight: 500; /* SAME weight */
+}
+
+/* DROPDOWN */
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 120%;
+  left: 0;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 10px 0;
+  min-width: 200px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: 0.3s ease;
+  z-index: 999;
+}
+
+.dropdown-menu a {
+  display: block;
+  padding: 10px 18px;
+  color: #333;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.dropdown-menu a:hover {
+  background: #f4f8f3;
+  color: #4CAF50;
+}
+
+/* Show on hover */
+.dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Flipkart-style Sticky Sidebar */
+.sticky-top {
+    z-index: 10;
+}
+
+/* Discount Labels */
+.text-success {
+    color: #388e3c !important; /* Official Flipkart green */
+}
+
+/* Assured Badge */
+.bestseller {
+    background: #2874f0; /* Flipkart blue */
+    font-size: 11px;
+    padding: 3px 8px;
+}
+
+/* Yellow Action Buttons */
+.btn-warning {
+    background: #fb641b !important; /* Flipkart Orange-Yellow */
+    border-color: #fb641b !important;
+    color: white !important;
+}
+
+/* ===============================
+   SCROLL REVEAL
+================================ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.7s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.payment-option {
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.payment-option:hover {
+  background: #f7faf7;
+  border-color: #cfe7cf;
+}
+
+/* ===============================
+   AUTH PAGE
+================================ */
+
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    padding: 60px 20px;
+    flex-wrap: wrap;
+    min-height: 80vh;
+}
+
+.auth-card {
+    background: white;
+    padding: 35px 30px;
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+    width: 340px;
+    text-align: center;
+}
+
+.auth-card.light {
+    background: #f6fbf4;
+}
+
+.auth-title {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.auth-card input {
+    margin-bottom: 12px;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.whatsapp-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #25D366;
+    color: white;
+    font-size: 24px;
+    padding: 12px 16px;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 999;
+}
+
+/* ===============================
+   MOBILE
+================================ */
+
+@media(max-width:768px){
+
+.hero-section {
+  min-height: 70vh;
+}
+
+.wave-wall {
+  height: 320px;
+}
+
+.rotator-track {
+  padding: 80px 0;
+}
+
+.best-card {
+  min-width: 220px;
+}
+
+.rating-card {
+  min-width: 280px;
+}
+
+.insta-item {
+  min-width: 260px;
+}
+
+.site-footer {
+  padding: 40px 20px;
+}
+
+.footer-container {
+  text-align: center;
+}
+
+}
+/* MOBILE MENU */
+
+.hamburger {
+  display: none;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .nav-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fbf8f5;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    display: none;
+  }
+
+  .nav-menu.show {
+    display: flex;
+  }
+}
+
+
+/* ===============================
+   CATEGORY – MOBILE PERFECTION
+================================ */
+
+@media (max-width: 768px) {
+
+  .category-section {
+    padding: 50px 10px;
+  }
+
+  .category-card img {
+    height: 180px;
+  }
+
+  .category-name {
+    font-size: 15px;
+    padding: 14px 10px;
+  }
+
+  /* Ensure equal spacing */
+  .category-section .row {
+    row-gap: 20px;
+  }
+
+}

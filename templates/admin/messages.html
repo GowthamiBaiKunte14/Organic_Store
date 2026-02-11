@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h2>Customer Messages</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+
+    {% for msg in messages %}
+    <tr>
+        <td>{{ msg.id }}</td>
+        <td>{{ msg.name }}</td>
+        <td>{{ msg.email }}</td>
+        <td>{{ msg.content }}</td>
+        <td>{{ msg.date }}</td>
+        <td>
+            <a href="/admin/messages/delete/{{ msg.id }}">Delete</a>
+        </td>
+        <td>
+            <a href="mailto:{{ msg.email }}" class="btn-small">
+                Reply
+            </a>
+            <a href="/admin/messages/delete/{{ msg.id }}" class="btn-small">
+                Delete
+            </a>
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+  <h2 class="mb-4">Checkout</h2>
+
+  <div class="row">
+
+    <!-- LEFT: CART ITEMS -->
+    <div class="col-md-6">
+      <h5>Order Summary</h5>
+
+      {% for item in cart_items %}
+        <div class="d-flex justify-content-between mb-2">
+          <span>{{ item.product.name }} (x{{ item.quantity }})</span>
+          <span>₹{{ item.subtotal }}</span>
+        </div>
+      {% endfor %}
+
+      <hr>
+      <h4>Total: ₹{{ total }}</h4>
+    </div>
+
+    <!-- RIGHT: ADDRESS FORM -->
+    <div class="col-md-6">
+
+      <form method="POST" action="/payment-cart">
+
+        <div class="mb-3">
+          <label class="form-label">Full Name</label>
+          <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Phone Number</label>
+          <input type="text" name="phone" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Address</label>
+          <textarea name="address" class="form-control" rows="3" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success btn-lg">
+          Place Order
+        </button>
+
+        <div class="mb-3">
+          <label class="form-label">Payment Method</label>
+          <select name="payment" class="form-control" required>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="UPI">UPI</option>
+          </select>
+        </div>
+
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+  <h2 class="mb-4">Checkout</h2>
+
+  <div class="row">
+
+    <div class="col-md-6">
+      <img src="{{ url_for('static', filename='images/' + product.image) }}"
+           class="img-fluid rounded shadow">
+    </div>
+
+    <div class="col-md-6">
+
+    <h4>{{ product.name }}</h4>
+    <h3 class="text-success">₹{{ product.price }}</h3>
+
+    <form method="POST" action="{{ url_for('payment_page', id=product.id) }}">
+
+
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="name" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Phone Number</label>
+        <input type="text" name="phone" class="form-control" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Address</label>
+        <textarea name="address" class="form-control" rows="3" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-success btn-lg mt-2">
+        Place Order
+      </button>
+
+      <a href="{{ url_for('product_detail', product_id=product.id) }}"
+        class="btn btn-outline-secondary mt-2">
+        Cancel
+      </a>
+
+      <div class="mb-3">
+        <label class="form-label">Payment Method</label>
+        <select name="payment" class="form-control" required>
+          <option value="Cash on Delivery">Cash on Delivery</option>
+          <option value="UPI">UPI</option>
+        </select>
+      </div>
+
+
+    </form>
+
+  </div>
+
+
+  </div>
+
+</div>
+
+{% endblock %}

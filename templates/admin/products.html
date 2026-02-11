@@ -1,0 +1,63 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<h1>Products</h1>
+
+<h3>Add New Product</h3>
+<form method="POST"
+      action="/admin/products/add"
+      enctype="multipart/form-data"
+      class="card"
+      style="padding:20px; margin-bottom:20px;">
+
+    <input type="text" name="name" placeholder="Product name" required>
+    <input type="number" name="price" placeholder="Price" required>
+
+    <select name="category" required>
+    <option value="">Select Category</option>
+    {% for cat in categories %}
+        <option value="{{ cat.name }}">{{ cat.name }}</option>
+    {% endfor %}
+    </select>
+
+    <input type="number" name="stock" placeholder="Stock quantity" required>
+
+
+    <label>Upload Image</label>
+    <input type="file" name="image" required>
+
+    <button type="submit">Add Product</button>
+</form>
+
+<table class="table">
+    <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Best</th>
+        <th>Featured</th>
+        <th>Action</th>
+    </tr>
+
+    {% for product in products %}
+    <tr>
+        <td>
+            <img src="{{ url_for('static', filename='images/' + product.image) }}"
+                 width="60">
+        </td>
+        <td>{{ product.name }}</td>
+        <td>₹{{ product.price }}</td>
+        <td>{{ product.stock }}</td>
+        <td>{{ "Yes" if product.is_best else "No" }}</td>
+        <td>{{ "Yes" if product.is_featured else "No" }}</td>
+        <td>
+            <a href="/admin/products/edit/{{ product.id }}">Edit</a> |
+            <a href="/admin/products/delete/{{ product.id }}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}
+

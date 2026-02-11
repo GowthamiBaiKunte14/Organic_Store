@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h1>Orders</h1>
+<a href="/admin/export-orders" class="btn-small">
+    Export Orders
+</a>
+
+<table class="admin-table">
+    <tr>
+        <th>ID</th>
+        <th>Customer</th>
+        <th>Total</th>
+        <th>Payment</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for order in orders %}
+    <tr>
+        <td>#{{ order.id }}</td>
+        <td>{{ order.customer_name }}</td>
+        <td>₹{{ order.total_price }}</td>
+        <td>{{ order.payment_method }}</td>
+        <td>
+            <span class="status {{ order.status|lower }}">
+                {{ order.status }}
+            </span>
+        </td>
+        <td>
+            {% if order.status != "Delivered" %}
+            <a href="/admin/orders/update-status/{{ order.id }}"
+               class="btn-small">
+                Update Status
+            </a>
+            {% else %}
+            Completed
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{% endblock %}

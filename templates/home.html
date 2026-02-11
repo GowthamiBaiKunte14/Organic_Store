@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- ================= PRODUCT ROTATOR ================= -->
+
+<section class="wave-wall">
+  <div class="rotator-track">
+
+    {% for product in products %}
+      <a href="/product/{{ product.id }}" class="rotator-item">
+        <img src="{{ url_for('static', filename='images/' + product.image) }}">
+      </a>
+    {% endfor %}
+
+    {% for product in products %}
+      <a href="/product/{{ product.id }}" class="rotator-item">
+        <img src="{{ url_for('static', filename='images/' + product.image) }}">
+      </a>
+    {% endfor %}
+
+  </div>
+</section>
+
+<!-- ================= SHOP BY CATEGORY ================= -->
+
+<section class="container category-section">
+
+  <h2 class="section-title">Shop by Category</h2>
+  <p class="section-subtitle">
+    Carefully curated organic categories for a healthier lifestyle
+  </p>
+
+  <div class="row mt-4">
+
+    <div class="col-md-4 col-6 mb-4 reveal">
+      <a href="/products?category=Seeds" class="category-link">
+        <div class="category-card">
+          <img src="{{ url_for('static', filename='images/seeds.jpg') }}">
+          <div class="category-name">Organic Seeds</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-4 col-6 mb-4">
+      <a href="/products?category=Pickles" class="category-link">
+        <div class="category-card">
+          <img src="{{ url_for('static', filename='images/pickle.jpg') }}">
+          <div class="category-name">Traditional Pickles</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-4 col-12 mb-4">
+      <a href="/products?category=Oils" class="category-link">
+        <div class="category-card">
+          <img src="{{ url_for('static', filename='images/oil1.jpg') }}">
+          <div class="category-name">Cold Pressed Oils</div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= FEATURED PRODUCTS ================= -->
+
+<section class="featured-section">
+
+  <h2 class="section-title">Featured Products</h2>
+  <p class="section-subtitle">
+    Hand-picked premium products
+  </p>
+
+  <div class="featured-grid">
+
+    {% for product in featured_products %}
+      <div class="featured-card">
+
+        <a href="/product/{{ product.id }}" class="product-link">
+          <img src="{{ url_for('static', filename='images/' + product.image) }}">
+          <h5>{{ product.name }}</h5>
+        </a>
+
+        <p class="price">₹{{ product.price }}</p>
+
+        <button class="btn btn-success add-cart-btn"
+                data-id="{{ product.id }}">
+          Add To Cart
+        </button>
+
+      </div>
+    {% endfor %}
+
+  </div>
+
+</section>
+
+<!-- ================= HERO SECTION ================= -->
+<section class="hero">
+    {% if hero and hero.image %}
+        <div class="hero-slide"
+             style="background-image: url('{{ url_for('static', filename='images/' + hero.image) }}');">
+            <div class="hero-overlay">
+                <h1>{{ hero.title }}</h1>
+                <p>{{ hero.subtitle }}</p>
+
+                <div class="hero-buttons">
+                    <a href="/products" class="btn-primary">Shop Now</a>
+                    <a href="/products" class="btn-secondary">Explore Products</a>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="hero-slide"
+             style="background-image: url('{{ url_for('static', filename='images/hero.jpg') }}');">
+            <div class="hero-overlay">
+                <h1>Pure Organic Products</h1>
+                <p>Cold pressed oils, seeds and traditional foods</p>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+
+<!-- ================= RECENTLY VIEWED ================= -->
+
+{% if recently_viewed %}
+
+<section class="container my-5">
+
+  <h2 class="section-title">Recently Viewed</h2>
+
+  <div class="recent-track mt-4">
+
+    {% for product in recently_viewed %}
+
+    <div class="col-md-3 col-sm-6 mb-4">
+
+      <div class="recent-card">
+
+        <a href="/product/{{ product.id }}" class="product-link">
+
+          <img src="{{ url_for('static', filename='images/' + product.image) }}" class="recent-img">
+
+          <div class="recent-body">
+
+            <div class="title-row">
+              <h5>{{ product.name }}</h5>
+            </div>
+
+            <p class="desc">Traditional wood pressed oil</p>
+
+            <div class="price-row">
+              <span class="price">₹{{ product.price }}</span>
+            </div>
+
+          </div>
+
+        </a>
+
+      </div>
+
+    </div>
+
+    {% endfor %}
+
+  </div>
+
+</section>
+
+{% endif %}
+
+<!-- ================= REVIEWS ================= -->
+
+<section class="container my-5" id="ratingSection">
+
+  <div class="text-center mb-5">
+    <h2 class="section-title">Our customers love us</h2>
+    <p class="section-subtitle">
+      ⭐ 4.8 star based on {{ reviews_row1|length + reviews_row2|length }} customer reviews
+    </p>
+  </div>
+
+  <div class="rating-marquee">
+
+    <!-- ROW 1 -->
+    <div class="rating-track track-left">
+      {% for r in reviews_row1 %}
+      <div class="rating-card">
+        {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
+        <p>{{ r.comment }}</p>
+        <strong>{{ r.name }}</strong>
+      </div>
+      {% endfor %}
+
+      {% for r in reviews_row1 %}
+      <div class="rating-card">
+        {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
+        <p>{{ r.comment }}</p>
+        <strong>{{ r.name }}</strong>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- ROW 2 -->
+    <div class="rating-track track-right">
+      {% for r in reviews_row2 %}
+      <div class="rating-card">
+        {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
+        <p>{{ r.comment }}</p>
+        <strong>{{ r.name }}</strong>
+      </div>
+      {% endfor %}
+
+      {% for r in reviews_row2 %}
+      <div class="rating-card">
+        {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
+        <p>{{ r.comment }}</p>
+        <strong>{{ r.name }}</strong>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= INSTAGRAM ================= -->
+
+<section class="instagram-section">
+  <div class="container text-center mb-4">
+    <h2 class="section-title">From Our Instagram</h2>
+  </div>
+
+  <div class="insta-scroll">
+    <div class="insta-track">
+
+      {% for video in videos %}
+      <div class="insta-item"
+           onclick="window.open('{{ video.url }}','_blank')">
+
+        <div class="insta-overlay">
+          <span>▶</span>
+        </div>
+
+        <p>{{ video.title }}</p>
+      </div>
+      {% endfor %}
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="site-footer">
+
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <div class="footer-logo">
+        <img src="{{ url_for('static', filename='images/logo.png') }}">
+        <h4>Pristine Organic Foods and Oils</h4>
+      </div>
+      <p>
+        100% natural, cold-pressed oils, organic seeds and traditional pickles.
+        Pure ingredients, honest processes, uncompromised quality.
+      </p>
+    </div>
+
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="/orders">Orders</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Our Products</h5>
+      <ul>
+        <li>Cold Pressed Oils</li>
+        <li>Organic Seeds</li>
+        <li>Traditional Pickles</li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h5>Contact Us</h5>
+      <p>📞 9874563210</p>
+      <p>✉ support@pristineoils.com</p>
+      <p>📍 Anantapur, AP, India</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    © 2026 <b>Pristine Organic Foods and Oils</b> — All Rights Reserved.
+  </div>
+
+</footer>
+
+{% endblock %}

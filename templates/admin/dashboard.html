@@ -1,0 +1,176 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h1 class="dashboard-title">Dashboard</h1>
+
+<!-- Stats -->
+<div class="stats-grid">
+
+    <div class="stat-card blue">
+        <div class="stat-icon">👤</div>
+        <div>
+            <h3>Users</h3>
+            <p>{{ total_users }}</p>
+        </div>
+    </div>
+
+    <div class="stat-card green">
+        <div class="stat-icon">🛒</div>
+        <div>
+            <h3>Orders</h3>
+            <p>{{ total_orders }}</p>
+        </div>
+    </div>
+
+    <div class="stat-card purple">
+        <div class="stat-icon">📦</div>
+        <div>
+            <h3>Products</h3>
+            <p>{{ total_products }}</p>
+        </div>
+    </div>
+
+    <div class="stat-card orange">
+        <div class="stat-icon">₹</div>
+        <div>
+            <h3>Revenue</h3>
+            <p>₹{{ total_revenue }}</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Charts -->
+<div class="charts">
+    <div class="chart-box">
+        <h3>Revenue (Last 7 Days)</h3>
+        <canvas id="revenueChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h3>Orders (Last 7 Days)</h3>
+        <canvas id="ordersChart"></canvas>
+    </div>
+</div>
+
+<!-- Order Status -->
+<div class="charts">
+    <div class="chart-box">
+        <h3>Order Status</h3>
+        <canvas id="statusChart"></canvas>
+    </div>
+</div>
+
+<!-- Recent Orders -->
+<div class="chart-box" style="margin-top: 30px;">
+    <h3>Recent Orders</h3>
+    <table class="admin-table">
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+        </tr>
+        {% for order in recent_orders %}
+        <tr>
+            <td>#{{ order.id }}</td>
+            <td>{{ order.customer_name }}</td>
+            <td>₹{{ order.total_price }}</td>
+            <td>{{ order.status }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="charts" style="margin-top: 30px;">
+
+    <!-- Top Selling Products -->
+    <div class="chart-box">
+        <h3>Top Selling Products</h3>
+        <table class="admin-table">
+            <tr>
+                <th>Product</th>
+                <th>Units Sold</th>
+            </tr>
+            {% for p in top_products %}
+            <tr>
+                <td>{{ p.product_name }}</td>
+                <td>{{ p.total_sold }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- Low Stock Alerts -->
+    <div class="chart-box">
+        <h3>Low Stock Alerts</h3>
+        <table class="admin-table">
+            <tr>
+                <th>Product</th>
+                <th>Stock</th>
+            </tr>
+            {% for p in low_stock %}
+            <tr>
+                <td>{{ p.name }}</td>
+                <td style="color:red; font-weight:bold;">
+                    {{ p.stock }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const labels = {{ chart_labels|tojson }};
+const revenueData = {{ revenue_values|tojson }};
+const orderData = {{ order_values|tojson }};
+
+new Chart(document.getElementById("revenueChart"), {
+    type: "line",
+    data: {
+        labels: labels,
+        datasets: [{
+            label: "Revenue",
+            data: revenueData,
+            tension: 0.4,
+            fill: true
+        }]
+    }
+});
+
+new Chart(document.getElementById("ordersChart"), {
+    type: "bar",
+    data: {
+        labels: labels,
+        datasets: [{
+            label: "Orders",
+            data: orderData
+        }]
+    }
+});
+
+// Order status chart
+const statusData = {
+    labels: ["Pending", "Shipped", "Delivered"],
+    datasets: [{
+        data: [
+            {{ status_counts["Pending"] }},
+            {{ status_counts["Shipped"] }},
+            {{ status_counts["Delivered"] }}
+        ]
+    }]
+};
+
+new Chart(document.getElementById("statusChart"), {
+    type: "doughnut",
+    data: statusData
+});
+
+</script>
+
+{% endblock %}
+

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 mb-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0 text-uppercase small fw-bold">1. Delivery Address</h5>
+                </div>
+                <div class="card-body bg-light small">
+                    <strong>{{ session.checkout_data.name }}</strong> — {{ session.checkout_data.phone }}<br>
+                    {{ session.checkout_data.address }}
+                </div>
+                
+                <div class="card-header bg-primary text-white py-3 mt-3">
+                    <h5 class="mb-0 text-uppercase small fw-bold">2. Order Summary ({{ cart_items|length }} items)</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart_items %}
+                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                        <img src="{{ url_for('static', filename='images/' + item.product.image) }}" 
+                             style="width: 60px; height: 60px; object-fit: contain;" class="me-3 border rounded">
+                        <div>
+                            <h6 class="mb-0">{{ item.product.name }}</h6>
+                            <span class="small text-muted">Qty: {{ item.quantity }}</span>
+                            <div class="fw-bold">₹{{ item.product.price }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="card-header bg-primary text-white py-3 mt-3">
+                    <h5 class="mb-0 text-uppercase small fw-bold">3. Payment Options</h5>
+                </div>
+                
+                <form method="POST" action="/confirm-cart-order">
+
+                    <div class="list-group list-group-flush">
+                        <label class="list-group-item py-3 d-flex align-items-center">
+                            <input class="form-check-input me-3" type="radio" name="payment" value="UPI" checked>
+                            <div class="flex-grow-1"><strong>UPI</strong><div class="small text-muted">GPay, PhonePe, Paytm</div></div>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" width="50">
+                        </label>
+
+                        <label class="list-group-item py-3 d-flex align-items-center">
+                            <input class="form-check-input me-3" type="radio" name="payment" value="Cash on Delivery">
+                            <div class="flex-grow-1"><strong>Cash on Delivery</strong></div>
+                        </label>
+                    </div>
+
+                    <div class="p-3 text-end bg-white border-top shadow-sm sticky-bottom">
+                        <button type="submit" class="btn btn-warning btn-lg fw-bold px-5" style="background-color: #fb641b; color: white; border: none; border-radius: 2px;">
+                            CONFIRM ORDER
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 100px;">
+                <div class="card-header bg-white py-3"><h6 class="text-muted mb-0 fw-bold small">PRICE DETAILS</h6></div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3"><span>Price</span><span>₹{{ old_price }}</span></div>
+                    <div class="d-flex justify-content-between mb-3 text-success"><span>Discount</span><span>− ₹{{ discount }}</span></div>
+                    <div class="d-flex justify-content-between mb-3"><span>Delivery</span><span class="text-success">FREE</span></div>
+                    <hr style="border-top: 1px dashed #bbb;">
+                    <div class="d-flex justify-content-between h5 fw-bold mb-0"><span>Total Payable</span><span>₹{{ total }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-primary { background-color: #2874f0 !important; }
+    .sticky-bottom { position: sticky; bottom: 0; z-index: 10; background: white; }
+</style>
+
+{% endblock %}

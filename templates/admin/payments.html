@@ -1,0 +1,28 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h2>Payments</h2>
+
+<table border="1" cellpadding="10" cellspacing="0">
+    <tr>
+        <th>Payment ID</th>
+        <th>Order ID</th>
+        <th>Amount</th>
+        <th>Payment Method</th>
+        <th>Date</th>
+        <th>Status</th>
+    </tr>
+
+    {% for order in orders %}
+    <tr>
+        <td>PAY{{ order.id }}</td>
+        <td>ORD{{ order.id }}</td>
+        <td>₹{{ order.total_price }}</td>
+        <td>{{ order.payment_method }}</td>
+        <td>{{ order.date }}</td>
+        <td>Success</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

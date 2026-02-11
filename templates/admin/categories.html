@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h2>Categories</h2>
+
+<h4>Add New Category</h4>
+<form method="POST" action="/admin/categories/add">
+    <input type="text" name="name" placeholder="Category name" required>
+    <input type="text" name="description" placeholder="Description" required>
+    <button type="submit">Add Category</button>
+</form>
+
+<hr>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Action</th>
+    </tr>
+
+    {% for cat in categories %}
+    <tr>
+        <td>{{ cat.id }}</td>
+        <td>{{ cat.name }}</td>
+        <td>{{ cat.description }}</td>
+        <td>
+            <a href="/admin/categories/delete/{{ cat.id }}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <h2 class="mb-4">My Orders</h2>
+
+    {% if orders %}
+        {% for order in orders %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between">
+                    <h5>Order #{{ order.id }}</h5>
+                    <span class="badge bg-success">
+                        {{ order.status }}
+                    </span>
+                </div>
+
+                <p class="text-muted">
+                    {{ order.date }}
+                </p>
+
+                <!-- Ordered products -->
+                <div class="mt-3">
+                    {% for item in order.items %}
+                    <div class="d-flex justify-content-between border-bottom py-2">
+                        <div>
+                            <strong>{{ item.product_name }}</strong>
+                            <br>
+                            <small>Qty: {{ item.quantity }}</small>
+                        </div>
+                        <div>
+                            ₹{{ item.price * item.quantity }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="text-end mt-3">
+                    <strong>Total: ₹{{ order.total_price }}</strong>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>No orders found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

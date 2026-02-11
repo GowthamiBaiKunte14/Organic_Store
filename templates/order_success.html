@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container text-center mt-5">
+
+  <div class="card p-5 shadow" style="max-width: 500px; margin: auto;">
+    
+    <h2 class="text-success mb-3">✔ Order Placed Successfully!</h2>
+
+    <p class="text-muted">
+      Thank you for your purchase.  
+      Your order has been received and will be processed soon.
+    </p>
+
+    <div class="mt-4">
+      <a href="{{ url_for('products_page') }}" class="btn btn-outline-success me-2">
+        Continue Shopping
+      </a>
+
+      <a href="{{ url_for('orders') }}" class="btn btn-success">
+        View My Orders
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

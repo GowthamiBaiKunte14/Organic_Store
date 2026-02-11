@@ -1,0 +1,30 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h2>Subscriptions</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Plan</th>
+        <th>Date</th>
+        <th>Action</th>
+    </tr>
+
+    {% for sub in subs %}
+    <tr>
+        <td>{{ sub.id }}</td>
+        <td>{{ sub.user_name }}</td>
+        <td>{{ sub.email }}</td>
+        <td>{{ sub.plan }}</td>
+        <td>{{ sub.date }}</td>
+        <td>
+            <a href="/admin/subscriptions/delete/{{ sub.id }}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

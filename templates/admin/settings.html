@@ -1,0 +1,27 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h2>Store Settings</h2>
+
+<form method="POST" action="/admin/settings/update">
+
+    <label>Store Name</label><br>
+    <input type="text" name="store_name"
+           value="{{ settings.store_name if settings else '' }}"><br><br>
+
+    <label>Email</label><br>
+    <input type="text" name="email"
+           value="{{ settings.email if settings else '' }}"><br><br>
+
+    <label>Phone</label><br>
+    <input type="text" name="phone"
+           value="{{ settings.phone if settings else '' }}"><br><br>
+
+    <label>Address</label><br>
+    <input type="text" name="address"
+           value="{{ settings.address if settings else '' }}"><br><br>
+
+    <button type="submit">Save Settings</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h2>Coupons</h2>
+
+<h4>Add New Coupon</h4>
+<form method="POST" action="/admin/coupons/add">
+    <input type="text" name="code" placeholder="Coupon Code" required>
+    <input type="number" name="discount" placeholder="Discount %" required>
+    <button type="submit">Add Coupon</button>
+</form>
+
+<hr>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>Code</th>
+        <th>Discount</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+
+    {% for coupon in coupons %}
+    <tr>
+        <td>{{ coupon.id }}</td>
+        <td>{{ coupon.code }}</td>
+        <td>{{ coupon.discount }}%</td>
+        <td>
+            {% if coupon.active %}
+                Active
+            {% else %}
+                Inactive
+            {% endif %}
+        </td>
+        <td>
+            <a href="/admin/coupons/delete/{{ coupon.id }}">Delete</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+
+<div class="admin-container">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2 class="logo">Admin Panel</h2>
+
+        <a href="/admin/dashboard" class="{% if request.path == '/admin/dashboard' %}active{% endif %}">Dashboard</a>
+        <a href="/admin/products">Products</a>
+        <a href="/admin/orders">Orders</a>
+        <a href="/admin/customers">Customers</a>
+        <a href="/admin/payments">Payments</a>
+        <a href="/admin/categories">Categories</a>
+        <a href="/admin/coupons">Coupons</a>
+        <a href="/admin/hero">Hero Banners</a>
+        <a href="/admin/messages">Messages</a>
+        <a href="/admin/videos">Videos</a>
+        <a href="/admin/settings">Settings</a>
+        <a href="/admin/reviews">Reviews</a>
+    </div>
+
+
+    <!-- Main Content -->
+    <main class="content">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+</body>
+</html>

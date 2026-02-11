@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+    <!-- PRODUCT SECTION -->
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='images/' + product.image) }}"
+                 class="img-fluid rounded shadow">
+        </div>
+
+        <div class="col-md-6">
+            <h2>{{ product.name }}</h2>
+            <h4 class="text-success mt-3">₹{{ product.price }}</h4>
+
+            <p class="mt-3">
+                Premium organic product made using traditional methods.
+                100% natural and chemical free.
+            </p>
+
+            {% if product.stock > 0 %}
+                <p class="text-success">
+                    <strong>In Stock:</strong> {{ product.stock }}
+                </p>
+
+                <div class="product-actions mt-3">
+                    <button class="btn btn-success add-cart-btn"
+                            data-id="{{ product.id }}">
+                        Add To Cart
+                    </button>
+
+                    <a href="{{ url_for('buy_now', id=product.id) }}"
+                    class="btn btn-success">
+                        Buy Now
+                    </a>
+                </div>
+            {% else %}
+                <p class="text-danger"><strong>Out of Stock</strong></p>
+
+                <button class="btn btn-secondary" disabled>
+                    Out of Stock
+                </button>
+            {% endif %}
+
+
+        </div>
+    </div>
+
+    <hr class="mt-5">
+
+    <!-- FLIPKART-STYLE RATING SUMMARY -->
+    <div class="rating-summary-box">
+
+        <!-- Left side -->
+        <div class="rating-left">
+            <div class="avg-rating-big">
+                {{ avg_rating }} ★
+            </div>
+
+            <p class="rating-count">
+                {{ review_count }} Ratings
+            </p>
+        </div>
+
+        <!-- Right side -->
+        <div class="rating-right">
+            {% for star in [5,4,3,2,1] %}
+            <div class="rating-bar-row">
+                <span class="star-label">{{ star }} ★</span>
+
+                <div class="bar">
+                    {% if review_count > 0 %}
+                        {% set percent = (rating_counts[star] * 100) // review_count %}
+                    {% else %}
+                        {% set percent = 0 %}
+                    {% endif %}
+                    <div class="fill" style="width: {{ percent }}%"></div>
+                </div>
+
+                <span class="count">{{ rating_counts[star] }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- REVIEW LIST -->
+    <div class="reviews-section">
+        <h3 class="review-title">Customer Reviews</h3>
+
+        {% if reviews %}
+            {% for review in reviews %}
+            <div class="review-card">
+                
+                <div class="review-stars">
+                    {% for i in range(review.rating) %}★{% endfor %}
+                    {% for i in range(5 - review.rating) %}☆{% endfor %}
+                </div>
+
+                <strong>{{ review.name }}</strong>
+                <span class="verified-badge">Verified Buyer</span>
+
+                <p>{{ review.comment }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No reviews yet.</p>
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <!-- WRITE REVIEW -->
+    <div class="write-review">
+        <h4>Rate this product</h4>
+
+        <form method="POST" action="/add-review/{{ product.id }}">
+
+            <input type="text" name="name" placeholder="Your name" required>
+
+            <div class="star-rating">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+
+            <input type="hidden" name="rating" id="rating" required>
+
+            <textarea name="comment" placeholder="Write your review" required></textarea>
+
+            <button type="submit" class="submit-review-btn">
+                Submit Review
+            </button>
+
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

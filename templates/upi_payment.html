@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container text-center mt-5">
+
+  <h2 class="mb-4">UPI Payment</h2>
+
+  <div class="card p-4 shadow" style="max-width: 400px; margin: auto;">
+
+    <h4>{{ product.name }}</h4>
+    <h3 class="text-success">₹{{ product.price }}</h3>
+
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=demo@upi&pn=OrganicStore&am={{ product.price }}"
+         class="my-3"
+         alt="UPI QR">
+
+    <p class="text-muted">
+      Scan using any UPI app to complete payment.
+    </p>
+
+    <a href="{{ url_for('confirm_upi_payment') }}"
+       class="btn btn-success w-100">
+      I Have Paid
+    </a>
+
+  </div>
+
+</div>
+
+{% endblock %}

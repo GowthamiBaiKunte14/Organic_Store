@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+{% block content %}
+
+<h1>Edit Product</h1>
+
+<form method="POST"
+      action="/admin/products/update/{{ product.id }}"
+      enctype="multipart/form-data"
+      class="card"
+      style="padding:20px;">
+
+    <input type="text" name="name"
+           value="{{ product.name }}" required>
+
+    <input type="number" name="price"
+           value="{{ product.price }}" required>
+
+    <input type="text" name="category"
+           value="{{ product.category }}" required>
+
+    <input type="number" name="stock"
+           value="{{ product.stock }}" required>
+
+    <label>
+        <input type="checkbox" name="is_best"
+               {% if product.is_best %}checked{% endif %}>
+        Best Seller
+    </label>
+
+    <label>
+        <input type="checkbox" name="is_featured"
+               {% if product.is_featured %}checked{% endif %}>
+        Featured
+    </label>
+
+    <br><br>
+
+    <label>Change Image</label>
+    <input type="file" name="image">
+
+    <br><br>
+
+    <button type="submit">Update Product</button>
+</form>
+
+{% endblock %}

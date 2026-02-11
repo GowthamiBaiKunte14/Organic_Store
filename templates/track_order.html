@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5" style="max-width: 600px;">
+    <h2 class="mb-4 text-center">Track Your Order</h2>
+
+    <form method="POST" class="mb-4">
+        <input type="text"
+               name="order_id"
+               class="form-control mb-3"
+               placeholder="Enter Order ID"
+               required>
+
+        <button class="btn btn-success w-100">
+            Track Order
+        </button>
+    </form>
+
+    {% if order %}
+    <div class="card p-4 shadow text-center">
+        <h4>Order #{{ order.id }}</h4>
+        <p><strong>Status:</strong></p>
+
+        <div class="status-bar">
+            <div class="step {% if order.status in ['Pending','Shipped','Delivered'] %}active{% endif %}">
+                Pending
+            </div>
+            <div class="step {% if order.status in ['Shipped','Delivered'] %}active{% endif %}">
+                Shipped
+            </div>
+            <div class="step {% if order.status == 'Delivered' %}active{% endif %}">
+                Delivered
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.step {
+    flex: 1;
+    padding: 10px;
+    margin: 5px;
+    background: #eee;
+    border-radius: 20px;
+}
+
+.step.active {
+    background: #4caf50;
+    color: white;
+}
+</style>
+
+{% endblock %}
