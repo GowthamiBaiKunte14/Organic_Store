@@ -78,17 +78,40 @@
     {% for product in featured_products %}
       <div class="featured-card">
 
-        <a href="/product/{{ product.id }}" class="product-link">
+        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-link">
           <img src="{{ url_for('static', filename='images/' + product.image) }}">
           <h5>{{ product.name }}</h5>
         </a>
 
-        <p class="price">₹{{ product.price }}</p>
+        {% if product.variants %}
+          {% set v = product.variants[0] %}
+          <p class="price">₹{{ v.price }}</p>
 
-        <button class="btn btn-success add-cart-btn"
-                data-id="{{ product.id }}">
-          Add To Cart
-        </button>
+          {% if v.stock > 0 %}
+              <p class="text-success small">
+                  In stock: {{ v.stock }}
+              </p>
+
+              <div class="d-flex gap-2">
+                  <button class="btn btn-success add-cart-btn"
+                          data-id="{{ v.id }}">
+                      Add To Cart
+                  </button>
+
+
+                  <a href="{{ url_for('buy_now', variant_id=v.id) }}"
+                    class="btn btn-warning">
+                    Buy Now
+                  </a>
+              </div>
+
+          {% else %}
+              <p class="text-danger">Out of stock</p>
+          {% endif %}
+
+        {% else %}
+          <p class="text-danger">Out of stock</p>
+        {% endif %}
 
       </div>
     {% endfor %}
@@ -96,7 +119,6 @@
   </div>
 
 </section>
-
 <!-- ================= HERO SECTION ================= -->
 <section class="hero">
     {% if hero and hero.image %}
@@ -229,6 +251,7 @@
 
 <!-- ================= INSTAGRAM ================= -->
 
+<!-- ================= INSTAGRAM ================= -->
 <section class="instagram-section">
   <div class="container text-center mb-4">
     <h2 class="section-title">From Our Instagram</h2>
@@ -238,20 +261,33 @@
     <div class="insta-track">
 
       {% for video in videos %}
-      <div class="insta-item"
-           onclick="window.open('{{ video.url }}','_blank')">
+      <div class="insta-item">
 
-        <div class="insta-overlay">
-          <span>▶</span>
-        </div>
+        <iframe
+          src="https://www.instagram.com{{ video.url.split('instagram.com')[-1] }}embed"
+          width="250"
+          height="320"
+          frameborder="0"
+          scrolling="no"
+          allowtransparency="true">
+        </iframe>
 
         <p>{{ video.title }}</p>
+
+        {% if video.variant_id %}
+        <a href="{{ url_for('buy_now', variant_id=video.variant_id) }}"
+           class="btn btn-warning mt-2">
+          Buy Now
+        </a>
+        {% endif %}
+
       </div>
       {% endfor %}
 
     </div>
   </div>
 </section>
+
 
 <!-- ================= FOOTER ================= -->
 

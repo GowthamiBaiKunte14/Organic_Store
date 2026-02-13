@@ -607,6 +607,12 @@ table td {
     font-weight: 600;
 }
 
+.sidebar hr {
+    border: none;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+}
+
 
 
 /* ================================

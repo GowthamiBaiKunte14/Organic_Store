@@ -223,22 +223,19 @@ window.addEventListener("scroll", () => {
 
 const backTop = document.getElementById("backTop");
 
-window.addEventListener("scroll", () => {
-
-  if (window.scrollY > 400) {
-    backTop.style.display = "block";
-  } else {
-    backTop.style.display = "none";
-  }
-
-});
-
 if (backTop) {
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 400) {
+      backTop.style.display = "block";
+    } else {
+      backTop.style.display = "none";
+    }
+  });
+
   backTop.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
 }
-
 
 function openInstagram(el) {
   const url = el.getAttribute("data-url");
@@ -246,23 +243,6 @@ function openInstagram(el) {
     window.open(url, "_blank");
   }
 }
-
-// Star rating selection
-document.querySelectorAll(".star").forEach(star => {
-    star.addEventListener("click", function () {
-        let value = this.getAttribute("data-value");
-        document.getElementById("rating").value = value;
-
-        document.querySelectorAll(".star").forEach(s => {
-            s.classList.remove("active");
-        });
-
-        for (let i = 0; i < value; i++) {
-            document.querySelectorAll(".star")[i].classList.add("active");
-        }
-    });
-});
-
 
 // Star rating input
 document.addEventListener("DOMContentLoaded", function () {

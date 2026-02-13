@@ -10,7 +10,7 @@
             <div class="alert alert-danger">{{ error }}</div>
         {% endif %}
 
-        <form method="POST">
+        <form action="/register" method="POST">
             <input type="text" name="name" class="form-control mb-2" placeholder="Full Name" required>
             <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
             <input type="password" name="password" class="form-control mb-2" placeholder="Password" required>
@@ -28,3 +28,4 @@
 </div>
 
 {% endblock %}
+

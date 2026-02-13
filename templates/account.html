@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5" style="max-width:600px;">
+    <h3 class="mb-4">My Account</h3>
+
+    <form method="POST" class="card p-4 shadow-sm">
+
+        <label>Name</label>
+        <input type="text" name="name"
+               value="{{ user.name }}"
+               class="form-control mb-3" required>
+
+        <label>Email</label>
+        <input type="email" name="email"
+               value="{{ user.email }}"
+               class="form-control mb-3" required>
+
+        <label>Phone</label>
+        <input type="text" name="phone"
+               value="{{ user.phone or '' }}"
+               class="form-control mb-3">
+
+        <label>Address</label>
+        <textarea name="address"
+                  class="form-control mb-3"
+                  rows="3">{{ user.address or '' }}</textarea>
+
+        <button id="updateBtn" class="btn btn-success w-100">
+            Update Details
+        </button>
+    </form>
+</div>
+<script>
+document.querySelector("form").addEventListener("submit", function () {
+    const btn = document.getElementById("updateBtn");
+    btn.innerText = "Updating...";
+    btn.disabled = true;
+});
+</script>
+
+{% endblock %}

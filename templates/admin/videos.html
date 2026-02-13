@@ -1,36 +1,84 @@
 {% extends "admin/base.html" %}
 {% block content %}
 
-<h2>Videos Manager</h2>
+<div class="page-header">
+    <h2>Videos Manager</h2>
+</div>
 
-<h4>Add New Video</h4>
-<form method="POST" action="/admin/videos/add">
-    <input type="text" name="title" placeholder="Video Title" required>
-    <input type="text" name="url" placeholder="Video URL" required>
-    <button type="submit">Add Video</button>
-</form>
+<!-- Add Video Form -->
+<div class="form-box" style="max-width:700px;">
+    <h4>Add New Video</h4>
 
-<hr>
+    <form method="POST" action="/admin/videos/add">
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>URL</th>
-        <th>Action</th>
-    </tr>
+        <label>Video Title</label>
+        <input type="text" name="title" placeholder="Video Title" required>
 
-    {% for video in videos %}
-    <tr>
-        <td>{{ video.id }}</td>
-        <td>{{ video.title }}</td>
-        <td>{{ video.url }}</td>
-        <td>
-            <a href="/admin/videos/delete/{{ video.id }}">Delete</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+        <label>Video URL</label>
+        <input type="text" name="url" placeholder="Instagram/Reel URL" required>
+
+        <label>Attach Product Variant (optional)</label>
+        <select name="variant_id">
+            <option value="">Select Product Variant</option>
+            {% for v in variants %}
+                <option value="{{ v.id }}">
+                    {{ v.product.name }} – {{ v.quantity }} (₹{{ v.price }})
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+            Add Video
+        </button>
+
+    </form>
+</div>
+
+<br>
+
+<!-- Videos Table -->
+<div class="table-container">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>URL</th>
+                <th>Variant</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for video in videos %}
+            <tr>
+                <td>{{ video.id }}</td>
+                <td>{{ video.title }}</td>
+                <td>
+                    <a href="{{ video.url }}" target="_blank">
+                        Open
+                    </a>
+                </td>
+                <td>
+                    {% if video.variant_id %}
+                        {{ video.variant.product.name }} – {{ video.variant.quantity }}
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="/admin/videos/delete/{{ video.id }}"
+                       class="btn btn-danger btn-small">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
 
 {% endblock %}
+
 

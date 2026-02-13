@@ -18,6 +18,38 @@
 
 <hr>
 
+<h4>Product Variants</h4>
+
+<div id="variant-container">
+
+    <div class="variant-row">
+        <input type="text" name="quantity" placeholder="Quantity (500ml)">
+        <input type="number" name="variant_price" placeholder="Price">
+        <input type="number" name="variant_stock" placeholder="Stock">
+    </div>
+
+</div>
+
+<button type="button" onclick="addVariant()">+ Add Variant</button>
+
+<script>
+function addVariant() {
+    const container = document.getElementById("variant-container");
+
+    const row = document.createElement("div");
+    row.classList.add("variant-row");
+
+    row.innerHTML = `
+        <input type="text" name="quantity" placeholder="Quantity (500ml)">
+        <input type="number" name="variant_price" placeholder="Price">
+        <input type="number" name="variant_stock" placeholder="Stock">
+    `;
+
+    container.appendChild(row);
+}
+</script>
+
+
 <h3>Products</h3>
 
 {% for product in products %}

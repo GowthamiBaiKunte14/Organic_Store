@@ -6,7 +6,7 @@
 <title>Pristine Organic Oils</title>
 <!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -95,8 +95,28 @@ content="organic oils, cold pressed oils, organic seeds, natural foods, traditio
           🛒 <span id="cartCount">{{ cart_count }}</span>
       </a>
 
-      <a href="/login">👤</a>
+      <div class="nav-icons">
 
+    {% if session.get("user_id") %}
+    <!-- Logged in user -->
+    <div class="account-dropdown">
+        <span class="account-icon">👤</span>
+
+        <div class="account-menu">
+            <p class="account-name">
+                {{ session.get("user_name") }}
+            </p>
+            <a href="/account">My Account</a>
+            <a href="/orders">My Orders</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    {% else %}
+    <!-- Not logged in -->
+    <a href="/login" class="account-icon">👤</a>
+    {% endif %}
+
+</div>
     </div>
 
   </div>
@@ -104,6 +124,18 @@ content="organic oils, cold pressed oils, organic seeds, natural foods, traditio
 </nav>
 
 {% block content %}{% endblock %}
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-success">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
 <!-- QUICK VIEW MODAL -->
 

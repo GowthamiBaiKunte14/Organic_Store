@@ -8,26 +8,42 @@
         {% for item in cart_items %}
         <div class="card p-3 mb-3">
             <div class="row align-items-center">
+                
                 <div class="col-md-2">
                     <img src="{{ url_for('static', filename='images/' + item.product.image) }}"
                          class="img-fluid">
                 </div>
-                <div class="col-md-6">
+
+                <div class="col-md-5">
                     <h5>{{ item.product.name }}</h5>
+                    <p>
+                        Variant: <strong>{{ item.variant.quantity }}</strong>
+                    </p>
                     <p>Qty: {{ item.quantity }}</p>
                 </div>
+
                 <div class="col-md-2">
-                    ₹{{ item.product.price }}
+                    ₹{{ item.variant.price }}
                 </div>
+
                 <div class="col-md-2">
-                    <a href="/remove-from-cart/{{ item.product.id }}"
-                       class="btn btn-danger btn-sm">Remove</a>
+                    ₹{{ item.subtotal }}
                 </div>
+
+                <div class="col-md-1">
+                    <a href="/remove-from-cart/{{ item.variant.id }}"
+                       class="btn btn-danger btn-sm">
+                        Remove
+                    </a>
+                </div>
+
             </div>
         </div>
         {% endfor %}
 
         <div class="text-end">
+            <h4>Total: ₹{{ total }}</h4>
+
             <a href="/checkout-cart" class="btn btn-success">
                 Proceed to Checkout
             </a>
@@ -39,3 +55,4 @@
 </div>
 
 {% endblock %}
+

@@ -1,63 +1,73 @@
 {% extends "admin/base.html" %}
 
 {% block content %}
-<h1>Products</h1>
 
-<h3>Add New Product</h3>
-<form method="POST"
-      action="/admin/products/add"
-      enctype="multipart/form-data"
-      class="card"
-      style="padding:20px; margin-bottom:20px;">
+<div class="page-header">
+    <h2>Products</h2>
+</div>
 
-    <input type="text" name="name" placeholder="Product name" required>
-    <input type="number" name="price" placeholder="Price" required>
+<div class="form-box">
+    <h3>Add New Product</h3>
 
-    <select name="category" required>
-    <option value="">Select Category</option>
-    {% for cat in categories %}
-        <option value="{{ cat.name }}">{{ cat.name }}</option>
-    {% endfor %}
-    </select>
+    <form method="POST"
+          action="/admin/products/add"
+          enctype="multipart/form-data">
 
-    <input type="number" name="stock" placeholder="Stock quantity" required>
+        <label>Product Name</label>
+        <input type="text" name="name" required>
 
+        <label>Category</label>
+        <select name="category" required>
+            <option value="">Select Category</option>
+            {% for cat in categories %}
+                <option value="{{ cat.name }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select>
 
-    <label>Upload Image</label>
-    <input type="file" name="image" required>
+        <label>Upload Image</label>
+        <input type="file" name="image" required>
 
-    <button type="submit">Add Product</button>
-</form>
+        <button type="submit" class="btn btn-primary">
+            Add Product
+        </button>
+    </form>
+</div>
 
-<table class="table">
-    <tr>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Stock</th>
-        <th>Best</th>
-        <th>Featured</th>
-        <th>Action</th>
-    </tr>
+<div class="table-container">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Best</th>
+                <th>Featured</th>
+                <th>Action</th>
+            </tr>
+        </thead>
 
-    {% for product in products %}
-    <tr>
-        <td>
-            <img src="{{ url_for('static', filename='images/' + product.image) }}"
-                 width="60">
-        </td>
-        <td>{{ product.name }}</td>
-        <td>₹{{ product.price }}</td>
-        <td>{{ product.stock }}</td>
-        <td>{{ "Yes" if product.is_best else "No" }}</td>
-        <td>{{ "Yes" if product.is_featured else "No" }}</td>
-        <td>
-            <a href="/admin/products/edit/{{ product.id }}">Edit</a> |
-            <a href="/admin/products/delete/{{ product.id }}">Delete</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+        <tbody>
+        {% for product in products %}
+            <tr>
+                <td>
+                    <img src="{{ url_for('static', filename='images/' + product.image) }}"
+                         class="product-img">
+                </td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>{{ "Yes" if product.is_best else "No" }}</td>
+                <td>{{ "Yes" if product.is_featured else "No" }}</td>
+                <td>
+                    <a href="/admin/products/edit/{{ product.id }}"
+                       class="btn btn-warning">Edit</a>
 
+                    <a href="/admin/products/delete/{{ product.id }}"
+                       class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
 

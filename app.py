@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, redirect, url_for, request
+from flask import Flask, jsonify, render_template, session, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -33,15 +33,27 @@ def inject_cart_count():
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
+
+    # base price used as fallback
     price = db.Column(db.Float, nullable=False)
+
     old_price = db.Column(db.Float, default=0.0)
     discount_pct = db.Column(db.Integer, default=0)
     is_assured = db.Column(db.Boolean, default=True)
-    image = db.Column(db.String(200))
-    category = db.Column(db.String(100))           # ← just String, no relationship
-    stock = db.Column(db.Integer, default=0)
-    # remove any db.relationship('Category', ...) line related to category
 
+    image = db.Column(db.String(200))
+    category = db.Column(db.String(100))
+    stock = db.Column(db.Integer, default=0)
+
+
+class ProductVariant(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
+    quantity = db.Column(db.String(50))   # e.g. 250ml, 500ml, 1L
+    price = db.Column(db.Float)
+    stock = db.Column(db.Integer)
+
+    product = db.relationship("Product", backref="variants")
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -75,8 +87,11 @@ class Subscription(db.Model):
 
 class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150))
+    title = db.Column(db.String(200))
     url = db.Column(db.String(300))
+    variant_id = db.Column(db.Integer, db.ForeignKey('product_variant.id'))
+
+    variant = db.relationship("ProductVariant")
 
 class Setting(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -104,9 +119,12 @@ class OrderItem(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(200))
+    phone = db.Column(db.String(20))
+    address = db.Column(db.String(300))
+
 
 class Admin(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -221,25 +239,27 @@ def home():
     reviews_row1 = reviews[:mid]
     reviews_row2 = reviews[mid:]
 
-    hero = Hero.query.order_by(Hero.id.desc()).first()
-    videos = Video.query.all()
-    categories = Category.query.all()
-
     heroes = Hero.query.all()
     hero = heroes[0] if heroes else None
 
+    videos = Video.query.all()
+
+    products = Product.query.all()
+
     return render_template(
         "home.html",
-        products=Product.query.all(),
-        best_products=Product.query.all(),
-        featured_products=Product.query.all(),
+        products=products,
+        best_products=products,        # temporary safe fallback
+        featured_products=products,    # temporary safe fallback
         recently_viewed=Product.query.filter(
             Product.id.in_(session.get("recently_viewed", []))
         ).all(),
         reviews_row1=reviews_row1,
         reviews_row2=reviews_row2,
-        hero=hero   # IMPORTANT
+        hero=hero,
+        videos=videos
     )
+
 
 @app.route("/products")
 def products_page():
@@ -254,11 +274,12 @@ def products_page():
     if category:
         query = query.filter_by(category=category)
 
-    if min_price:
+    if min_price is not None:
         query = query.filter(Product.price >= min_price)
 
-    if max_price:
+    if max_price is not None:
         query = query.filter(Product.price <= max_price)
+
 
     products = query.all()
     categories = Category.query.all()
@@ -350,6 +371,7 @@ def product_detail(product_id):
     return render_template(
         "product_detail.html",
         product=product,
+        variants=product.variants,
         reviews=reviews,
         avg_rating=avg_rating,
         review_count=review_count,
@@ -358,43 +380,68 @@ def product_detail(product_id):
 
 # ---------------- CART ----------------
 
-@app.route("/add-to-cart/<int:id>")
-def add_to_cart(id):
-    product = Product.query.get(id)
+@app.route("/add-to-cart/<int:variant_id>")
+def add_to_cart(variant_id):
+    variant = ProductVariant.query.get(variant_id)
 
-    if not product or product.stock <= 0:
-        return {"status": "out_of_stock"}
+    if not variant or variant.stock <= 0:
+        return jsonify({"status": "out_of_stock"})
 
     cart = session.get("cart", {})
-    cart[str(id)] = cart.get(str(id), 0) + 1
+
+    key = f"v{variant_id}"
+    cart[key] = cart.get(key, 0) + 1
+
+    session["cart"] = cart
+
+    count = sum(cart.values())
+
+    return jsonify({
+        "status": "ok",
+        "count": count
+    })
+
+@app.route("/remove-from-cart/<int:variant_id>")
+def remove_from_cart(variant_id):
+    cart = session.get("cart", {})
+
+    key = f"v{variant_id}"
+    cart.pop(key, None)
+
     session["cart"] = cart
     session.modified = True
 
-    return {
-        "status": "ok",
-        "count": sum(cart.values())
-    }
-
+    return redirect(url_for("cart_page"))
 
 
 @app.route("/cart")
-def cart_page():                     # ← CHANGED NAME
+def cart_page():
     cart = session.get("cart", {})
     cart_items = []
     total = 0
 
-    for pid, qty in cart.items():
-        product = Product.query.get(int(pid))
-        if product:
-            subtotal = product.price * qty
-            cart_items.append({
-                "product": product,
-                "quantity": qty,
-                "subtotal": subtotal
-            })
-            total += subtotal
+    for variant_key, qty in cart.items():
+        variant_id = int(variant_key.replace("v", ""))
+        variant = db.session.get(ProductVariant, variant_id)
 
-    return render_template("cart.html", cart_items=cart_items, total=total)
+        if not variant:
+            continue
+
+        product = variant.product
+
+        subtotal = variant.price * qty
+        total += subtotal
+
+        cart_items.append({
+            "product": product,
+            "variant": variant,
+            "quantity": qty,
+            "subtotal": subtotal
+        })
+
+    return render_template("cart.html",
+                           cart_items=cart_items,
+                           total=total)
 
 
 @app.route("/clear-cart")
@@ -406,92 +453,101 @@ def clear_cart():
 # ---------------- CHECKOUT FROM CART ----------------
 
 @app.route("/checkout-cart")
-def checkout_cart():                         # ← keep this name or change to checkout_from_cart
+def checkout_cart():
     cart = session.get("cart", {})
-    cart_items = []
+    items = []
     total = 0
 
-    for pid, qty in cart.items():
-        product = Product.query.get(int(pid))
-        if product:
-            subtotal = product.price * qty
-            cart_items.append({
-                "product": product,
-                "quantity": qty,
-                "subtotal": subtotal
-            })
-            total += subtotal
+    for variant_key, qty in cart.items():
+        variant_id = int(variant_key.replace("v", ""))
+        variant = db.session.get(ProductVariant, variant_id)
 
-    return render_template("checkout_cart.html", cart_items=cart_items, total=total)
+        if not variant:
+            continue
 
+        product = variant.product
+
+        subtotal = variant.price * qty
+        total += subtotal
+
+        items.append({
+            "product": product,
+            "variant": variant,
+            "quantity": qty,
+            "subtotal": subtotal
+        })
+
+    return render_template("checkout_cart.html",
+                           items=items,
+                           total=total)
 
 @app.route("/confirm-cart-order", methods=["POST"])
 def confirm_cart_order():
     cart = session.get("cart", {})
+    checkout_data = session.get("checkout_data")
 
-    if not cart:
+    if not cart or not checkout_data:
         return redirect(url_for("products_page"))
-
-    checkout = session.get("checkout_data", {})
-
-    name = checkout.get("name")
-    phone = checkout.get("phone")
-    address = checkout.get("address")
-    payment = request.form.get("payment")
-
 
     total = 0
 
     order = Order(
         date=datetime.now().strftime("%d-%m-%Y %H:%M"),
-        total_price=0,  # will be updated later
-        payment_method=payment,
-        customer_name=name,
-        customer_phone=phone,
-        customer_address=address,
+        total_price=0,
+        payment_method="COD",
+        customer_name=checkout_data["name"],
+        customer_phone=checkout_data["phone"],
+        customer_address=checkout_data["address"],
         status="Pending"
     )
-
     db.session.add(order)
-    db.session.commit()   # commit to get order.id
 
-    for pid, qty in cart.items():
-        product = Product.query.get(int(pid))
-        if product:
-            # reduce stock
-            product.stock = max(product.stock - qty, 0)
+    for variant_key, qty in cart.items():
+        variant_id = int(variant_key.replace("v", ""))
+        variant = db.session.get(ProductVariant, variant_id)
 
-            subtotal = product.price * qty
-            total += subtotal
+        if not variant:
+            continue
 
-            item = OrderItem(
-                order_id=order.id,
-                product_name=product.name,
-                price=product.price,
-                quantity=qty
-            )
-            db.session.add(item)
+        # STOCK CHECK
+        if variant.stock < qty:
+            return "Not enough stock for " + variant.product.name
 
+        # Deduct stock
+        variant.stock -= qty
+
+        product = variant.product
+        subtotal = variant.price * qty
+        total += subtotal
+
+        order_item = OrderItem(
+            order_id=order.id,
+            product_name=product.name,
+            price=variant.price,
+            quantity=qty
+        )
+        db.session.add(order_item)
 
     order.total_price = total
     db.session.commit()
 
-    session.pop("cart", None)
+    session["cart"] = {}
 
     return redirect(url_for("order_success"))
 
 # ---------------- BUY NOW ----------------
 
-@app.route("/buy-now/<int:id>")
-def buy_now(id):
+@app.route("/buy-now/<int:variant_id>")
+def buy_now(variant_id):
+    variant = db.session.get(ProductVariant, variant_id)
 
-    product = db.session.get(Product, id)
-
-    if not product:
+    if not variant or variant.stock <= 0:
         return redirect(url_for("products_page"))
 
-    return render_template("checkout.html", product=product)
+    # create temporary cart with only this item
+    session["cart"] = {f"v{variant_id}": 1}
 
+    return redirect(url_for("checkout_cart"))
 
 # ---------------- PAYMENT PAGE ----------------
 
@@ -528,18 +584,25 @@ def payment_cart():
 
     cart_items = []
     total = 0
-    old_price = 0
-    discount = 0
 
-    for pid, qty in cart.items():
-        product = Product.query.get(int(pid))
-        if product:
-            subtotal = product.price * qty
-            cart_items.append({
-                "product": product,
-                "quantity": qty
-            })
-            total += subtotal
+    for variant_key, qty in cart.items():
+
+        variant_id = int(variant_key.replace("v", ""))
+        variant = db.session.get(ProductVariant, variant_id)
+
+        if not variant:
+            continue
+
+        product = variant.product
+        subtotal = variant.price * qty
+        total += subtotal
+
+        cart_items.append({
+            "product": product,
+            "variant": variant,
+            "quantity": qty,
+            "subtotal": subtotal
+        })
 
     return render_template(
         "payment_cart.html",
@@ -548,7 +611,6 @@ def payment_cart():
         old_price=total,
         discount=0
     )
-
 
 @app.route("/confirm-order/<int:id>", methods=["POST"])
 def confirm_order(id):
@@ -724,10 +786,9 @@ def login():
         if user and check_password_hash(user.password, password):
             session['user_id'] = user.id
             session['user_name'] = user.name
-            return redirect(url_for('home'))  # or 'products_page'
+            return redirect(url_for('home'))
         return render_template('login.html', error='Invalid credentials')
     return render_template('login.html')
-
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -751,11 +812,36 @@ def register():
 
     return render_template('register.html')
 
-
 @app.route("/logout")
 def logout():
     session.pop("user_id", None)
+    session.pop("user_name", None)
     return redirect("/")
+
+from flask import flash
+
+@app.route("/account", methods=["GET", "POST"])
+def account():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("login"))
+
+    user = db.session.get(User, user_id)
+
+    if request.method == "POST":
+        user.name = request.form["name"]
+        user.email = request.form["email"]
+        user.phone = request.form["phone"]
+        user.address = request.form["address"]
+
+        db.session.commit()
+
+        session["user_name"] = user.name
+        flash("Details updated successfully", "success")
+
+        return redirect(url_for("account"))
+
+    return render_template("account.html", user=user)
 
 # ---------------- ADMIN PAGE ----------------
 @app.route("/admin/dashboard")
@@ -873,8 +959,24 @@ def admin_products():
         return redirect(url_for("admin_login"))
 
     products = Product.query.all()
-    return render_template("admin/products.html", products=products)
 
+    # get unique categories from existing products
+    categories = db.session.query(Product.category).distinct().all()
+    categories = [{"name": c[0]} for c in categories if c[0]]
+
+    # fallback categories if database empty
+    if not categories:
+        categories = [
+            {"name": "Oils"},
+            {"name": "Seeds"},
+            {"name": "Pickles"}
+        ]
+
+    return render_template(
+        "admin/products.html",
+        products=products,
+        categories=categories
+    )
 
 @app.route("/admin/products/add", methods=["POST"])
 def admin_add_product():
@@ -882,28 +984,41 @@ def admin_add_product():
         return redirect(url_for("admin_login"))
 
     name = request.form["name"]
-    price = int(request.form["price"])
     category = request.form["category"]
 
     image_file = request.files["image"]
-
     filename = ""
     if image_file:
         filename = secure_filename(image_file.filename)
         image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         image_file.save(image_path)
 
-    stock = int(request.form["stock"])
-
+    # create product
     product = Product(
         name=name,
-        price=price,
+        price=0,  # base price not used when variants exist
         image=filename,
         category=category,
-        stock=stock
+        stock=0
     )
-
     db.session.add(product)
+    db.session.commit()
+
+    # create variants
+    quantities = request.form.getlist("quantity")
+    prices = request.form.getlist("variant_price")
+    stocks = request.form.getlist("variant_stock")
+
+    for q, p, s in zip(quantities, prices, stocks):
+        if q and p and s:
+            variant = ProductVariant(
+                product_id=product.id,
+                quantity=q,
+                price=float(p),
+                stock=int(s)
+            )
+            db.session.add(variant)
+
     db.session.commit()
 
     return redirect(url_for("admin_products"))
@@ -919,32 +1034,72 @@ def admin_delete_product(id):
 
     return redirect(url_for("admin_products"))
 
-@app.route("/admin/products/edit/<int:id>")
+@app.route("/admin/products/edit/<int:id>", methods=["GET", "POST"])
 def admin_edit_product(id):
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
 
     product = Product.query.get_or_404(id)
+
+    if request.method == "POST":
+        # Update basic product info
+        product.name = request.form.get("name")
+        product.category = request.form.get("category")
+        product.description = request.form.get("description")
+
+        # Optional: fallback price if no variants
+        if request.form.get("price"):
+            product.price = float(request.form.get("price"))
+
+        # ===== VARIANT UPDATE =====
+        quantities = request.form.getlist("variant_quantity[]")
+        prices = request.form.getlist("variant_price[]")
+        stocks = request.form.getlist("variant_stock[]")
+
+        # Delete old variants
+        ProductVariant.query.filter_by(product_id=product.id).delete()
+
+        # Add new variants
+        for i in range(len(quantities)):
+            q = quantities[i].strip()
+            p = prices[i].strip()
+            s = stocks[i].strip()
+
+            if q and p:
+                variant = ProductVariant(
+                    product_id=product.id,
+                    quantity=q,
+                    price=float(p),
+                    stock=int(s) if s else 0
+                )
+                db.session.add(variant)
+
+        db.session.commit()
+        return redirect(url_for("admin_products"))
+
     return render_template("admin/edit_product.html", product=product)
+
 
 @app.route("/admin/products/update/<int:id>", methods=["POST"])
 def admin_update_product(id):
     if not session.get("admin_logged_in"):
         return redirect(url_for("admin_login"))
 
-    product = Product.query.get_or_404(id)
+    product = db.session.get(Product, id)
 
+    # Basic fields
     product.name = request.form["name"]
-    product.price = int(request.form["price"])
+    product.price = float(request.form["price"])
     product.category = request.form["category"]
-    product.stock = int(request.form["stock"])
 
+    # Checkbox handling
     product.is_best = "is_best" in request.form
     product.is_featured = "is_featured" in request.form
 
-    image_file = request.files["image"]
+    # Safe image handling
+    image_file = request.files.get("image")
 
-    if image_file and image_file.filename != "":
+    if image_file and image_file.filename:
         filename = secure_filename(image_file.filename)
         image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
         image_file.save(image_path)
@@ -953,6 +1108,7 @@ def admin_update_product(id):
     db.session.commit()
 
     return redirect(url_for("admin_products"))
+
 
 @app.route("/admin/orders")
 def admin_orders():
@@ -1007,9 +1163,9 @@ def add_category():
         return redirect("/admin/login")
 
     name = request.form["name"]
-    description = request.form["description"]
 
-    new_cat = Category(name=name, description=description)
+    new_cat = Category(name=name)
+
     db.session.add(new_cat)
     db.session.commit()
 
@@ -1139,10 +1295,16 @@ def delete_message(id):
 @app.route("/admin/videos")
 def admin_videos():
     if not session.get("admin_logged_in"):
-        return redirect("/admin/login")
+        return redirect(url_for("admin_login"))
 
-    videos = Video.query.order_by(Video.id.desc()).all()
-    return render_template("admin/videos.html", videos=videos)
+    videos = Video.query.all()
+    variants = ProductVariant.query.all()
+
+    return render_template(
+        "admin/videos.html",
+        videos=videos,
+        variants=variants
+    )
 
 @app.route("/admin/videos/add", methods=["POST"])
 def add_video():

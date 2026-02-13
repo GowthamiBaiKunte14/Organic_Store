@@ -1,37 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Admin Panel</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Admin CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
 <div class="admin-container">
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2 class="logo">Admin Panel</h2>
+    <!-- ================= SIDEBAR ================= -->
+    <aside class="sidebar">
 
-        <a href="/admin/dashboard" class="{% if request.path == '/admin/dashboard' %}active{% endif %}">Dashboard</a>
-        <a href="/admin/products">Products</a>
-        <a href="/admin/orders">Orders</a>
-        <a href="/admin/customers">Customers</a>
-        <a href="/admin/payments">Payments</a>
-        <a href="/admin/categories">Categories</a>
-        <a href="/admin/coupons">Coupons</a>
-        <a href="/admin/hero">Hero Banners</a>
-        <a href="/admin/messages">Messages</a>
-        <a href="/admin/videos">Videos</a>
-        <a href="/admin/settings">Settings</a>
-        <a href="/admin/reviews">Reviews</a>
-    </div>
+        <div class="logo">
+            Admin Panel
+        </div>
 
+        <nav>
+            <a href="/admin/dashboard"
+               class="{% if request.path == '/admin/dashboard' %}active{% endif %}">
+               Dashboard
+            </a>
 
-    <!-- Main Content -->
+            <a href="/admin/products"
+               class="{% if '/admin/products' in request.path %}active{% endif %}">
+               Products
+            </a>
+
+            <a href="/admin/orders"
+               class="{% if '/admin/orders' in request.path %}active{% endif %}">
+               Orders
+            </a>
+
+            <a href="/admin/customers"
+               class="{% if '/admin/customers' in request.path %}active{% endif %}">
+               Customers
+            </a>
+
+            <a href="/admin/payments"
+               class="{% if '/admin/payments' in request.path %}active{% endif %}">
+               Payments
+            </a>
+
+            <a href="/admin/categories"
+               class="{% if '/admin/categories' in request.path %}active{% endif %}">
+               Categories
+            </a>
+
+            <a href="/admin/coupons"
+               class="{% if '/admin/coupons' in request.path %}active{% endif %}">
+               Coupons
+            </a>
+
+            <a href="/admin/hero"
+               class="{% if '/admin/hero' in request.path %}active{% endif %}">
+               Hero Banners
+            </a>
+
+            <a href="/admin/messages"
+               class="{% if '/admin/messages' in request.path %}active{% endif %}">
+               Messages
+            </a>
+
+            <a href="/admin/videos"
+               class="{% if '/admin/videos' in request.path %}active{% endif %}">
+               Videos
+            </a>
+
+            <a href="/admin/settings"
+               class="{% if '/admin/settings' in request.path %}active{% endif %}">
+               Settings
+            </a>
+
+            <a href="/admin/reviews"
+               class="{% if '/admin/reviews' in request.path %}active{% endif %}">
+               Reviews
+            </a>
+
+            <hr style="margin:20px 0; border:0; border-top:1px solid rgba(255,255,255,0.2);">
+
+            <a href="/admin/logout">
+               Logout
+            </a>
+        </nav>
+
+    </aside>
+
+    <!-- ================= MAIN CONTENT ================= -->
     <main class="content">
-        {% block content %}{% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
     </main>
 
 </div>
+
 </body>
 </html>

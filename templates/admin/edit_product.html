@@ -4,9 +4,9 @@
 <h1>Edit Product</h1>
 
 <form method="POST"
-      action="/admin/products/update/{{ product.id }}"
+      action=""
       enctype="multipart/form-data"
-      class="card"
+      class="form-box"
       style="padding:20px;">
 
     <input type="text" name="name"
@@ -17,9 +17,6 @@
 
     <input type="text" name="category"
            value="{{ product.category }}" required>
-
-    <input type="number" name="stock"
-           value="{{ product.stock }}" required>
 
     <label>
         <input type="checkbox" name="is_best"
@@ -38,9 +35,91 @@
     <label>Change Image</label>
     <input type="file" name="image">
 
+    <hr>
+
+    <!-- ================= VARIANTS ================= -->
+    <h4>Product Variants</h4>
+
+    <div id="variantContainer">
+
+        {% for v in product.variants %}
+        <div class="row mb-2 variant-row">
+            <input type="text"
+                   name="variant_quantity[]"
+                   value="{{ v.quantity }}"
+                   placeholder="Quantity (e.g. 500g)"
+                   required>
+
+            <input type="number"
+                   name="variant_price[]"
+                   value="{{ v.price }}"
+                   placeholder="Price"
+                   required>
+
+            <input type="number"
+                   name="variant_stock[]"
+                   value="{{ v.stock }}"
+                   placeholder="Stock"
+                   required>
+
+            <button type="button"
+                    onclick="removeVariant(this)">
+                Remove
+            </button>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <button type="button" onclick="addVariant()">
+        + Add Variant
+    </button>
+
     <br><br>
 
-    <button type="submit">Update Product</button>
+    <button type="submit" class="btn btn-primary">
+       Update Product
+    </button>
+
 </form>
 
+<script>
+function addVariant() {
+    const container = document.getElementById("variantContainer");
+
+    const row = document.createElement("div");
+    row.className = "variant-row";
+    row.style.marginBottom = "10px";
+
+    row.innerHTML = `
+        <input type="text"
+               name="variant_quantity[]"
+               placeholder="Quantity (e.g. 500g)"
+               required>
+
+        <input type="number"
+               name="variant_price[]"
+               placeholder="Price"
+               required>
+
+        <input type="number"
+               name="variant_stock[]"
+               placeholder="Stock"
+               required>
+
+        <button type="button"
+                onclick="removeVariant(this)">
+            Remove
+        </button>
+    `;
+
+    container.appendChild(row);
+}
+
+function removeVariant(btn) {
+    btn.parentElement.remove();
+}
+</script>
+
 {% endblock %}
+
