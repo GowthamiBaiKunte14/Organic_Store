@@ -1432,7 +1432,40 @@ def admin_logout():
 # ---------------- RUN ----------------
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+
+        # create admin
+        admin = Admin.query.first()
+        if not admin:
+            admin = Admin(
+                username="admin",
+                password=generate_password_hash("admin123")
+            )
+            db.session.add(admin)
+
+        # auto-create products if none exist
+        if not Product.query.first():
+            oil = Product(name="Cold Pressed Groundnut Oil", price=0, image="oil1.jpg", category="Oils", stock=0)
+            seeds = Product(name="Organic Seeds Pack", price=0, image="seeds.jpg", category="Seeds", stock=0)
+            pickle = Product(name="Traditional Mango Pickle", price=0, image="pickle.jpg", category="Pickles", stock=0)
+
+            db.session.add_all([oil, seeds, pickle])
+            db.session.commit()
+
+            db.session.add_all([
+                ProductVariant(product_id=oil.id, quantity="500ml", price=180, stock=20),
+                ProductVariant(product_id=oil.id, quantity="1L", price=340, stock=15),
+                ProductVariant(product_id=seeds.id, quantity="500g", price=80, stock=25),
+                ProductVariant(product_id=seeds.id, quantity="1kg", price=150, stock=20),
+                ProductVariant(product_id=pickle.id, quantity="250g", price=90, stock=30),
+                ProductVariant(product_id=pickle.id, quantity="500g", price=170, stock=25),
+            ])
+
+        db.session.commit()
+
     app.run(debug=True)
+
 
 
 
