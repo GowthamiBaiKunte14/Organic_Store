@@ -23,6 +23,7 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
 
+
 # ---------------- MODELS ----------------
 @app.context_processor
 def inject_cart_count():
@@ -145,6 +146,19 @@ class Review(db.Model):
     verified = db.Column(db.Boolean, default=False)
 
     product = db.relationship('Product', backref='reviews')
+
+with app.app_context():
+    db.create_all()
+
+    # create default admin
+    admin = Admin.query.first()
+    if not admin:
+        admin = Admin(
+            username="admin",
+            password=generate_password_hash("admin123")
+        )
+        db.session.add(admin)
+        db.session.commit()
 
 # ---------------- HELPERS ----------------
 
@@ -1418,19 +1432,7 @@ def admin_logout():
 # ---------------- RUN ----------------
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-
-        # Create default admin if not exists
-        admin = Admin.query.first()
-        if not admin:
-            admin = Admin(
-                username="admin",
-                password=generate_password_hash("admin123")
-            )
-            db.session.add(admin)
-            db.session.commit()
-
     app.run(debug=True)
+
 
 
