@@ -4,51 +4,53 @@
 <div class="products-container">
     <h2 class="page-title">All Products</h2>
 
-    <div class="products-grid">
+```
+<div class="products-grid">
 
-    {% for product in products %}
-    <div class="product-card">
+{% for product in products %}
+<div class="product-card">
 
-        <a href="{{ url_for('product_detail', product_id=product.id) }}">
-            <img src="{{ url_for('static', filename='images/' + product.image) }}">
-            <h5>{{ product.name }}</h5>
-        </a>
-
-        {% if product.variants %}
-            {% set v = product.variants[0] %}
-            <p class="price">₹{{ v.price }}</p>
-
-            {% if v.stock > 0 %}
-                <p class="text-success small">
-                    In stock: {{ v.stock }}
-                </p>
-
-                <div class="d-flex gap-2">
-                    <button class="btn btn-success add-cart-btn"
-                            data-id="{{ v.id }}">
-                        Add to Cart
-                    </button>
+    <a href="{{ url_for('product_detail', product_id=product.id) }}">
+        <img src="{{ product.image if 'http' in product.image else url_for('static', filename='images/' + product.image) }}">
 
 
-                    <a href="{{ url_for('buy_now', variant_id=v.id) }}"
-                    class="btn btn-warning">
-                    Buy Now
-                    </a>
-                </div>
+        <h5>{{ product.name }}</h5>
+    </a>
 
-            {% else %}
-                <p class="text-danger">Out of stock</p>
-            {% endif %}
+    {% if product.variants %}
+        {% set v = product.variants[0] %}
+        <p class="price">₹{{ v.price }}</p>
+
+        {% if v.stock > 0 %}
+            <p class="text-success small">
+                In stock: {{ v.stock }}
+            </p>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-success add-cart-btn"
+                        data-id="{{ v.id }}">
+                    Add to Cart
+                </button>
+
+
+                <a href="{{ url_for('buy_now', variant_id=v.id) }}"
+                class="btn btn-warning">
+                Buy Now
+                </a>
+            </div>
+
         {% else %}
             <p class="text-danger">Out of stock</p>
         {% endif %}
-    </div>
-    {% endfor %}
+    {% else %}
+        <p class="text-danger">Out of stock</p>
+    {% endif %}
+</div>
+{% endfor %}
 
-    </div>
+</div>
+```
+
 </div>
 
 {% endblock %}
-
-
-

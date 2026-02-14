@@ -244,6 +244,21 @@ function openInstagram(el) {
   }
 }
 
+document.querySelectorAll(".increase").forEach(btn => {
+    btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        window.location.href = "/cart/increase/" + id;
+    });
+});
+
+document.querySelectorAll(".decrease").forEach(btn => {
+    btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        window.location.href = "/cart/decrease/" + id;
+    });
+});
+
+
 // Star rating input
 document.addEventListener("DOMContentLoaded", function () {
     const stars = document.querySelectorAll(".star");

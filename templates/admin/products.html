@@ -50,8 +50,9 @@
         {% for product in products %}
             <tr>
                 <td>
-                    <img src="{{ url_for('static', filename='images/' + product.image) }}"
-                         class="product-img">
+                    <img src="{{ product.image if 'http' in product.image else url_for('static', filename='images/' + product.image) }}"
+                        class="product-img">
+
                 </td>
                 <td>{{ product.name }}</td>
                 <td>{{ product.category }}</td>

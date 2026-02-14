@@ -1813,6 +1813,36 @@ body {
     border-radius: 10px;
 }
 
+.cart-qty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.qty-btn {
+    background: #1b5e20;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.qty-btn:hover {
+    background: #144d18;
+}
+
+.qty-number {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.product-image {
+    width: 100%;
+    max-height: 450px;
+    object-fit: contain;
+}
 
 /* ===============================
    MOBILE

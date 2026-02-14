@@ -6,17 +6,17 @@
 <section class="wave-wall">
   <div class="rotator-track">
 
-    {% for product in products %}
-      <a href="/product/{{ product.id }}" class="rotator-item">
-        <img src="{{ url_for('static', filename='images/' + product.image) }}">
-      </a>
-    {% endfor %}
+{% for product in products %}
+  <a href="/product/{{ product.id }}" class="rotator-item">
+    <img src="{{ product.image if 'http' in product.image else url_for('static', filename='images/' + product.image) }}">
+  </a>
+{% endfor %}
 
-    {% for product in products %}
-      <a href="/product/{{ product.id }}" class="rotator-item">
-        <img src="{{ url_for('static', filename='images/' + product.image) }}">
-      </a>
-    {% endfor %}
+{% for product in products %}
+  <a href="/product/{{ product.id }}" class="rotator-item">
+    <img src="{{ product.image if 'http' in product.image else url_for('static', filename='images/' + product.image) }}">
+  </a>
+{% endfor %}
 
   </div>
 </section>
@@ -32,37 +32,36 @@
 
   <div class="row mt-4">
 
-    <div class="col-md-4 col-6 mb-4 reveal">
-      <a href="/products?category=Seeds" class="category-link">
-        <div class="category-card">
-          <img src="{{ url_for('static', filename='images/seeds.jpg') }}">
-          <div class="category-name">Organic Seeds</div>
-        </div>
-      </a>
+<div class="col-md-4 col-6 mb-4 reveal">
+  <a href="/products?category=Seeds" class="category-link">
+    <div class="category-card">
+      <img src="{{ url_for('static', filename='images/seeds.jpg') }}">
+      <div class="category-name">Organic Seeds</div>
     </div>
+  </a>
+</div>
 
-    <div class="col-md-4 col-6 mb-4">
-      <a href="/products?category=Pickles" class="category-link">
-        <div class="category-card">
-          <img src="{{ url_for('static', filename='images/pickle.jpg') }}">
-          <div class="category-name">Traditional Pickles</div>
-        </div>
-      </a>
+<div class="col-md-4 col-6 mb-4">
+  <a href="/products?category=Pickles" class="category-link">
+    <div class="category-card">
+      <img src="{{ url_for('static', filename='images/pickle.jpg') }}">
+      <div class="category-name">Traditional Pickles</div>
     </div>
+  </a>
+</div>
 
-    <div class="col-md-4 col-12 mb-4">
-      <a href="/products?category=Oils" class="category-link">
-        <div class="category-card">
-          <img src="{{ url_for('static', filename='images/oil1.jpg') }}">
-          <div class="category-name">Cold Pressed Oils</div>
-        </div>
-      </a>
+<div class="col-md-4 col-12 mb-4">
+  <a href="/products?category=Oils" class="category-link">
+    <div class="category-card">
+      <img src="{{ url_for('static', filename='images/oil1.jpg') }}">
+      <div class="category-name">Cold Pressed Oils</div>
     </div>
+  </a>
+</div>
 
   </div>
 
 </section>
-
 
 <!-- ================= FEATURED PRODUCTS ================= -->
 
@@ -75,51 +74,52 @@
 
   <div class="featured-grid">
 
-    {% for product in featured_products %}
-      <div class="featured-card">
+{% for product in featured_products %}
+  <div class="featured-card">
 
-        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-link">
-          <img src="{{ url_for('static', filename='images/' + product.image) }}">
-          <h5>{{ product.name }}</h5>
-        </a>
+    <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-link">
+      <img src="{{ product.image if 'http' in product.image else url_for('static', filename='images/' + product.image) }}">
+      <h5>{{ product.name }}</h5>
+    </a>
 
-        {% if product.variants %}
-          {% set v = product.variants[0] %}
-          <p class="price">₹{{ v.price }}</p>
+    {% if product.variants %}
+      {% set v = product.variants[0] %}
+      <p class="price">₹{{ v.price }}</p>
 
-          {% if v.stock > 0 %}
-              <p class="text-success small">
-                  In stock: {{ v.stock }}
-              </p>
+      {% if v.stock > 0 %}
+          <p class="text-success small">
+              In stock: {{ v.stock }}
+          </p>
 
-              <div class="d-flex gap-2">
-                  <button class="btn btn-success add-cart-btn"
-                          data-id="{{ v.id }}">
-                      Add To Cart
-                  </button>
+          <div class="d-flex gap-2">
+              <button class="btn btn-success add-cart-btn"
+                      data-id="{{ v.id }}">
+                  Add To Cart
+              </button>
 
+              <a href="{{ url_for('buy_now', variant_id=v.id) }}"
+                class="btn btn-warning">
+                Buy Now
+              </a>
+          </div>
 
-                  <a href="{{ url_for('buy_now', variant_id=v.id) }}"
-                    class="btn btn-warning">
-                    Buy Now
-                  </a>
-              </div>
-
-          {% else %}
-              <p class="text-danger">Out of stock</p>
-          {% endif %}
-
-        {% else %}
+      {% else %}
           <p class="text-danger">Out of stock</p>
-        {% endif %}
+      {% endif %}
 
-      </div>
-    {% endfor %}
+    {% else %}
+      <p class="text-danger">Out of stock</p>
+    {% endif %}
+
+  </div>
+{% endfor %}
 
   </div>
 
 </section>
+
 <!-- ================= HERO SECTION ================= -->
+
 <section class="hero">
     {% if hero and hero.image %}
         <div class="hero-slide"
@@ -128,23 +128,23 @@
                 <h1>{{ hero.title }}</h1>
                 <p>{{ hero.subtitle }}</p>
 
-                <div class="hero-buttons">
-                    <a href="/products" class="btn-primary">Shop Now</a>
-                    <a href="/products" class="btn-secondary">Explore Products</a>
-                </div>
+            <div class="hero-buttons">
+                <a href="/products" class="btn-primary">Shop Now</a>
+                <a href="/products" class="btn-secondary">Explore Products</a>
             </div>
         </div>
-    {% else %}
-        <div class="hero-slide"
-             style="background-image: url('{{ url_for('static', filename='images/hero.jpg') }}');">
-            <div class="hero-overlay">
-                <h1>Pure Organic Products</h1>
-                <p>Cold pressed oils, seeds and traditional foods</p>
-            </div>
+    </div>
+{% else %}
+    <div class="hero-slide"
+         style="background-image: url('{{ url_for('static', filename='images/hero.jpg') }}');">
+        <div class="hero-overlay">
+            <h1>Pure Organic Products</h1>
+            <p>Cold pressed oils, seeds and traditional foods</p>
         </div>
-    {% endif %}
-</section>
+    </div>
+{% endif %}
 
+</section>
 
 <!-- ================= RECENTLY VIEWED ================= -->
 
@@ -156,37 +156,37 @@
 
   <div class="recent-track mt-4">
 
-    {% for product in recently_viewed %}
+{% for product in recently_viewed %}
 
-    <div class="col-md-3 col-sm-6 mb-4">
+<div class="col-md-3 col-sm-6 mb-4">
 
-      <div class="recent-card">
+  <div class="recent-card">
 
-        <a href="/product/{{ product.id }}" class="product-link">
+    <a href="/product/{{ product.id }}" class="product-link">
 
-          <img src="{{ url_for('static', filename='images/' + product.image) }}" class="recent-img">
+      <img src="{{ product.image if 'http' in product.image else url_for('static', filename='images/' + product.image) }}" class="recent-img">
 
-          <div class="recent-body">
+      <div class="recent-body">
 
-            <div class="title-row">
-              <h5>{{ product.name }}</h5>
-            </div>
+        <div class="title-row">
+          <h5>{{ product.name }}</h5>
+        </div>
 
-            <p class="desc">Traditional wood pressed oil</p>
+        <p class="desc">Traditional wood pressed oil</p>
 
-            <div class="price-row">
-              <span class="price">₹{{ product.price }}</span>
-            </div>
-
-          </div>
-
-        </a>
+        <div class="price-row">
+          <span class="price">₹{{ product.price }}</span>
+        </div>
 
       </div>
 
-    </div>
+    </a>
 
-    {% endfor %}
+  </div>
+
+</div>
+
+{% endfor %}
 
   </div>
 
@@ -207,43 +207,43 @@
 
   <div class="rating-marquee">
 
-    <!-- ROW 1 -->
-    <div class="rating-track track-left">
-      {% for r in reviews_row1 %}
-      <div class="rating-card">
-        {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
-        <p>{{ r.comment }}</p>
-        <strong>{{ r.name }}</strong>
-      </div>
-      {% endfor %}
+<!-- ROW 1 -->
+<div class="rating-track track-left">
+  {% for r in reviews_row1 %}
+  <div class="rating-card">
+    {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
+    <p>{{ r.comment }}</p>
+    <strong>{{ r.name }}</strong>
+  </div>
+  {% endfor %}
 
-      {% for r in reviews_row1 %}
-      <div class="rating-card">
-        {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
-        <p>{{ r.comment }}</p>
-        <strong>{{ r.name }}</strong>
-      </div>
-      {% endfor %}
-    </div>
+  {% for r in reviews_row1 %}
+  <div class="rating-card">
+    {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
+    <p>{{ r.comment }}</p>
+    <strong>{{ r.name }}</strong>
+  </div>
+  {% endfor %}
+</div>
 
-    <!-- ROW 2 -->
-    <div class="rating-track track-right">
-      {% for r in reviews_row2 %}
-      <div class="rating-card">
-        {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
-        <p>{{ r.comment }}</p>
-        <strong>{{ r.name }}</strong>
-      </div>
-      {% endfor %}
+<!-- ROW 2 -->
+<div class="rating-track track-right">
+  {% for r in reviews_row2 %}
+  <div class="rating-card">
+    {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
+    <p>{{ r.comment }}</p>
+    <strong>{{ r.name }}</strong>
+  </div>
+  {% endfor %}
 
-      {% for r in reviews_row2 %}
-      <div class="rating-card">
-        {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
-        <p>{{ r.comment }}</p>
-        <strong>{{ r.name }}</strong>
-      </div>
-      {% endfor %}
-    </div>
+  {% for r in reviews_row2 %}
+  <div class="rating-card">
+    {{ "⭐" * r.rating }}{{ "☆" * (5 - r.rating) }}
+    <p>{{ r.comment }}</p>
+    <strong>{{ r.name }}</strong>
+  </div>
+  {% endfor %}
+</div>
 
   </div>
 
@@ -251,7 +251,6 @@
 
 <!-- ================= INSTAGRAM ================= -->
 
-<!-- ================= INSTAGRAM ================= -->
 <section class="instagram-section">
   <div class="container text-center mb-4">
     <h2 class="section-title">From Our Instagram</h2>
@@ -260,34 +259,34 @@
   <div class="insta-scroll">
     <div class="insta-track">
 
-      {% for video in videos %}
-      <div class="insta-item">
+  {% for video in videos %}
+  <div class="insta-item">
 
-        <iframe
-          src="https://www.instagram.com{{ video.url.split('instagram.com')[-1] }}embed"
-          width="250"
-          height="320"
-          frameborder="0"
-          scrolling="no"
-          allowtransparency="true">
-        </iframe>
+    <iframe
+      src="https://www.instagram.com{{ video.url.split('instagram.com')[-1] }}embed"
+      width="250"
+      height="320"
+      frameborder="0"
+      scrolling="no"
+      allowtransparency="true">
+    </iframe>
 
-        <p>{{ video.title }}</p>
+    <p>{{ video.title }}</p>
 
-        {% if video.variant_id %}
-        <a href="{{ url_for('buy_now', variant_id=video.variant_id) }}"
-           class="btn btn-warning mt-2">
-          Buy Now
-        </a>
-        {% endif %}
+    {% if video.variant_id %}
+    <a href="{{ url_for('buy_now', variant_id=video.variant_id) }}"
+       class="btn btn-warning mt-2">
+      Buy Now
+    </a>
+    {% endif %}
 
-      </div>
-      {% endfor %}
+  </div>
+  {% endfor %}
 
-    </div>
+</div>
+
   </div>
 </section>
-
 
 <!-- ================= FOOTER ================= -->
 
@@ -295,41 +294,41 @@
 
   <div class="footer-container">
 
-    <div class="footer-col">
-      <div class="footer-logo">
-        <img src="{{ url_for('static', filename='images/logo.png') }}">
-        <h4>Pristine Organic Foods and Oils</h4>
-      </div>
-      <p>
-        100% natural, cold-pressed oils, organic seeds and traditional pickles.
-        Pure ingredients, honest processes, uncompromised quality.
-      </p>
-    </div>
+<div class="footer-col">
+  <div class="footer-logo">
+    <img src="{{ url_for('static', filename='images/logo.png') }}">
+    <h4>Pristine Organic Foods and Oils</h4>
+  </div>
+  <p>
+    100% natural, cold-pressed oils, organic seeds and traditional pickles.
+    Pure ingredients, honest processes, uncompromised quality.
+  </p>
+</div>
 
-    <div class="footer-col">
-      <h5>Quick Links</h5>
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/products">Products</a></li>
-        <li><a href="/orders">Orders</a></li>
-      </ul>
-    </div>
+<div class="footer-col">
+  <h5>Quick Links</h5>
+  <ul>
+    <li><a href="/">Home</a></li>
+    <li><a href="/products">Products</a></li>
+    <li><a href="/orders">Orders</a></li>
+  </ul>
+</div>
 
-    <div class="footer-col">
-      <h5>Our Products</h5>
-      <ul>
-        <li>Cold Pressed Oils</li>
-        <li>Organic Seeds</li>
-        <li>Traditional Pickles</li>
-      </ul>
-    </div>
+<div class="footer-col">
+  <h5>Our Products</h5>
+  <ul>
+    <li>Cold Pressed Oils</li>
+    <li>Organic Seeds</li>
+    <li>Traditional Pickles</li>
+  </ul>
+</div>
 
-    <div class="footer-col">
-      <h5>Contact Us</h5>
-      <p>📞 9874563210</p>
-      <p>✉ support@pristineoils.com</p>
-      <p>📍 Anantapur, AP, India</p>
-    </div>
+<div class="footer-col">
+  <h5>Contact Us</h5>
+  <p>📞 9874563210</p>
+  <p>✉ support@pristineoils.com</p>
+  <p>📍 Anantapur, AP, India</p>
+</div>
 
   </div>
 

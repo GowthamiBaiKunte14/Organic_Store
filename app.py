@@ -6,7 +6,8 @@ from datetime import datetime
 import os
 import smtplib
 from email.mime.text import MIMEText
-
+import cloudinary
+import cloudinary.uploader
 
 app = Flask(__name__)
 app.secret_key = "organic_store_secret"
@@ -17,12 +18,14 @@ db_file = os.path.join(basedir, "store.db")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + db_file
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-UPLOAD_FOLDER = os.path.join(basedir, "static/uploads")
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-
 db = SQLAlchemy(app)
 
+# Cloudinary configuration using environment variables
+cloudinary.config(
+    cloud_name=os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.environ.get("CLOUDINARY_API_KEY"),
+    api_secret=os.environ.get("CLOUDINARY_API_SECRET")
+)
 
 # ---------------- MODELS ----------------
 @app.context_processor
@@ -463,6 +466,28 @@ def clear_cart():
     session.pop("cart", None)
     return redirect(url_for("cart_page"))         # ← also updated here
 
+
+@app.route("/cart/increase/<int:variant_id>")
+def cart_increase(variant_id):
+    cart = session.get("cart", {})
+    key = f"v{variant_id}"
+    cart[key] = cart.get(key, 0) + 1
+    session["cart"] = cart
+    return redirect(url_for("cart_page"))
+
+
+@app.route("/cart/decrease/<int:variant_id>")
+def cart_decrease(variant_id):
+    cart = session.get("cart", {})
+    key = f"v{variant_id}"
+
+    if key in cart:
+        cart[key] -= 1
+        if cart[key] <= 0:
+            del cart[key]
+
+    session["cart"] = cart
+    return redirect(url_for("cart_page"))
 
 # ---------------- CHECKOUT FROM CART ----------------
 
@@ -1000,18 +1025,22 @@ def admin_add_product():
     name = request.form["name"]
     category = request.form["category"]
 
-    image_file = request.files["image"]
-    filename = ""
-    if image_file:
-        filename = secure_filename(image_file.filename)
-        image_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
-        image_file.save(image_path)
+    image = request.files.get("image")
+
+    image_url = None
+    if image and image.filename:
+        try:
+            upload_result = cloudinary.uploader.upload(image)
+            image_url = upload_result["secure_url"]
+        except Exception as e:
+            print("Cloudinary upload error:", e)
+            return "Image upload failed. Please upload a valid JPG or PNG."
 
     # create product
     product = Product(
         name=name,
-        price=0,  # base price not used when variants exist
-        image=filename,
+        price=0,
+        image=image_url,
         category=category,
         stock=0
     )
@@ -1036,6 +1065,7 @@ def admin_add_product():
     db.session.commit()
 
     return redirect(url_for("admin_products"))
+
 
 @app.route("/admin/products/delete/<int:id>")
 def admin_delete_product(id):

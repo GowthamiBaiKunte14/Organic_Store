@@ -3,134 +3,136 @@
 
 <div class="container mt-5">
 
-    <div class="row">
-        <!-- Product Image -->
-        <div class="col-md-6">
-            <img src="{{ url_for('static', filename='images/' + product.image) }}"
-                 class="img-fluid rounded shadow">
+```
+<div class="row">
+    <!-- Product Image -->
+    <div class="col-md-6">
+        <img src="{{ product.image if 'http' in product.image else url_for('static', filename='images/' + product.image) }}"
+            class="img-fluid rounded shadow"
+            style="max-height: 450px; object-fit: contain; width: 100%;">
+
+    </div>
+
+    <!-- Product Info -->
+    <div class="col-md-6">
+        <h2 class="mb-2">{{ product.name }}</h2>
+
+        <!-- Rating -->
+        <div class="mb-2">
+            {% if avg_rating %}
+                <strong>{{ avg_rating }}/5</strong>
+            {% else %}
+                <strong>No ratings yet</strong>
+            {% endif %}
         </div>
 
-        <!-- Product Info -->
-        <div class="col-md-6">
-            <h2 class="mb-2">{{ product.name }}</h2>
+        <!-- Description -->
+        {% if product.description %}
+            <p class="text-muted">
+                {{ product.description }}
+            </p>
+        {% endif %}
 
-            <!-- Rating -->
-            <div class="mb-2">
-                {% if avg_rating %}
-                    <strong>{{ avg_rating }}/5</strong>
-                {% else %}
-                    <strong>No ratings yet</strong>
-                {% endif %}
-            </div>
+        <hr>
 
-            <!-- Description -->
-            {% if product.description %}
-                <p class="text-muted">
-                    {{ product.description }}
-                </p>
+        <!-- Variant Pricing -->
+            <h5 class="mb-3">Available Options</h5>
+
+            {% if product.variants %}
+                <div class="variant-list">
+                    {% for v in product.variants %}
+                        <div class="mb-2">
+
+                            <div class="d-flex align-items-center gap-3">
+
+                                <span class="fw-bold">
+                                    {{ v.quantity }} – ₹{{ v.price }}
+                                </span>
+
+                                {% if v.stock > 0 %}
+                                    <span class="text-success small">
+                                        In stock: {{ v.stock }}
+                                    </span>
+
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-success add-cart-btn"
+                                                data-id="{{ v.id }}">
+                                            Add to Cart
+                                        </button>
+
+                                        <a href="{{ url_for('buy_now', variant_id=v.id) }}"
+                                        class="btn btn-warning">
+                                            Buy Now
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <span class="text-danger small">
+                                        Out of stock
+                                    </span>
+
+                                    <button class="btn btn-secondary" disabled>
+                                        Out of Stock
+                                    </button>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-danger">Out of stock</p>
             {% endif %}
 
             <hr>
 
-            <!-- Variant Pricing -->
-                <h5 class="mb-3">Available Options</h5>
 
-                {% if product.variants %}
-                    <div class="variant-list">
-                        {% for v in product.variants %}
-                            <div class="mb-2">
+        <!-- Review Form -->
+        <h5>Write a Review</h5>
+        <form method="POST" action="/add-review/{{ product.id }}">
+            <input type="hidden" name="rating" id="rating">
 
-                                <div class="d-flex align-items-center gap-3">
-
-                                    <span class="fw-bold">
-                                        {{ v.quantity }} – ₹{{ v.price }}
-                                    </span>
-
-                                    {% if v.stock > 0 %}
-                                        <span class="text-success small">
-                                            In stock: {{ v.stock }}
-                                        </span>
-
-                                        <div class="d-flex gap-2">
-                                            <button class="btn btn-success add-cart-btn"
-                                                    data-id="{{ v.id }}">
-                                                Add to Cart
-                                            </button>
-
-                                            <a href="{{ url_for('buy_now', variant_id=v.id) }}"
-                                            class="btn btn-warning">
-                                                Buy Now
-                                            </a>
-                                        </div>
-                                    {% else %}
-                                        <span class="text-danger small">
-                                            Out of stock
-                                        </span>
-
-                                        <button class="btn btn-secondary" disabled>
-                                            Out of Stock
-                                        </button>
-                                    {% endif %}
-
-                                </div>
-
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p class="text-danger">Out of stock</p>
-                {% endif %}
-
-                <hr>
-
-
-            <!-- Review Form -->
-            <h5>Write a Review</h5>
-            <form method="POST" action="/add-review/{{ product.id }}">
-                <input type="hidden" name="rating" id="rating">
-
-                <div class="mb-2">
-                    <span class="star" data-value="1">★</span>
-                    <span class="star" data-value="2">★</span>
-                    <span class="star" data-value="3">★</span>
-                    <span class="star" data-value="4">★</span>
-                    <span class="star" data-value="5">★</span>
-                </div>
-
-                <textarea name="comment"
-                          class="form-control mb-2"
-                          placeholder="Write your review"
-                          required></textarea>
-
-                <button class="btn btn-primary">
-                    Submit Review
-                </button>
-            </form>
-
-        </div>
-    </div>
-
-    <hr class="my-5">
-
-    <!-- Reviews Section -->
-    <h4>Customer Reviews</h4>
-
-    {% if reviews %}
-        {% for r in reviews %}
-            <div class="border rounded p-3 mb-3">
-                <strong>{{ r.rating }}/5</strong>
-                <p class="mb-1">{{ r.comment }}</p>
-                <small class="text-muted">
-                    {{ r.date }}
-                </small>
+            <div class="mb-2">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
             </div>
-        {% endfor %}
-    {% else %}
-        <p>No reviews yet.</p>
-    {% endif %}
+
+            <textarea name="comment"
+                      class="form-control mb-2"
+                      placeholder="Write your review"
+                      required></textarea>
+
+            <button class="btn btn-primary">
+                Submit Review
+            </button>
+        </form>
+
+    </div>
+</div>
+
+<hr class="my-5">
+
+<!-- Reviews Section -->
+<h4>Customer Reviews</h4>
+
+{% if reviews %}
+    {% for r in reviews %}
+        <div class="border rounded p-3 mb-3">
+            <strong>{{ r.rating }}/5</strong>
+            <p class="mb-1">{{ r.comment }}</p>
+            <small class="text-muted">
+                {{ r.date }}
+            </small>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No reviews yet.</p>
+{% endif %}
+```
 
 </div>
 
 {% endblock %}
-
-
